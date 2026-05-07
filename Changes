@@ -1,4 +1,4 @@
-{{$NEXT}}
+0.001     2026-05-07 03:36:59Z
 
   - Initial release with full Mailbox.org API support
   - JSON-RPC 2.0 over HTTPS with session-based authentication (HPLS-AUTH)

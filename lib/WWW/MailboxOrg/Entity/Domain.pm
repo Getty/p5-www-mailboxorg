@@ -4,7 +4,7 @@ package WWW::MailboxOrg::Entity::Domain;
 
 use Moo;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 has _client => (
     is       => 'ro',

@@ -20,7 +20,7 @@ use WWW::MailboxOrg::API::Utils;
 use WWW::MailboxOrg::API::System;
 use namespace::clean;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 =head1 SYNOPSIS
 

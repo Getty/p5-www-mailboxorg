@@ -10,7 +10,7 @@ use JSON::MaybeXS qw(decode_json encode_json);
 
 with 'WWW::MailboxOrg::Role::IO';
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 =head1 SYNOPSIS
 

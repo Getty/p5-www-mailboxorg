@@ -6,7 +6,7 @@ use Moo;
 use MooX::Singleton;
 use Carp qw(croak);
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 has client => (
     is       => 'ro',

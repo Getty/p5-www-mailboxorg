@@ -9,7 +9,7 @@ use Params::ValidationCompiler qw(validation_for);
 use Types::Standard qw(Str Bool HashRef);
 use WWW::MailboxOrg::Types qw(DomainName);
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 has client => (
     is       => 'ro',

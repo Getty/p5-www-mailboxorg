@@ -4,7 +4,7 @@ package WWW::MailboxOrg::JSONRPCRequest;
 
 use Moo;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 =head1 SYNOPSIS
 

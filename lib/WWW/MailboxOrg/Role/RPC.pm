@@ -4,7 +4,7 @@ package WWW::MailboxOrg::Role::RPC;
 
 use Moo::Role;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 requires 'client';
 

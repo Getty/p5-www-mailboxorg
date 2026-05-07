@@ -35,11 +35,11 @@ __END__
 
 =head1 TYPES
 
-=type EmailAddress
+=func EmailAddress
 
 Valid email address format.
 
-=type DomainName
+=func DomainName
 
 Valid domain name format.
 

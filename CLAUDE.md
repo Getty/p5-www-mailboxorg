@@ -48,4 +48,14 @@ Session-basiert mit HPLS-AUTH Header. Credentials über Environment:
 
 ## POD Dokumentation
 
-Per `=method`, `=attr`, `=type` Commands (nicht `=head2`). PODWeaver generiert NAME, VERSION, etc. automatisch.
+### Inline Commands (werden zu =head2)
+
+- `=attr name` → `=head2 name`
+- `=method method_name` → `=head2 method_name`
+- `=func func_name` → `=head2 func_name`
+- `=opt` - CLI options
+- `=env` - Environment variables
+- `=hook` - Hooks
+- `=example` - Examples
+
+PODWeaver generiert NAME, VERSION, etc. automatisch.

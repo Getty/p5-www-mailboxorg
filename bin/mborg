@@ -810,31 +810,27 @@ mborg - Command-line interface for L<WWW::MailboxOrg>
 
     mborg --user=user@example.com --password=secret login
 
-    # Read credentials from environment
+    # Credentials via environment
     MAILBOX_USER=user@example.com MAILBOX_PASSWORD=secret mborg login
 
-    # Read credentials from config file (~/.mailboxrc)
+    # Credentials via config file (~/.mailboxrc)
     mborg login
 
-    # Account management
     mborg account list
     mborg account get user@example.com
     mborg account add user@example.com secret123 basic
     mborg account del user@example.com
     mborg account set user@example.com plan=profi memo="Updated"
 
-    # Domain management
     mborg domain list
     mborg domain get example.com
     mborg domain add admin@example.com example.com secret123
     mborg domain del admin@example.com example.com
     mborg domain set example.com password=newsecret
 
-    # Mail operations
     mborg mail list folder=INBOX unseen_only=1
     mborg mail find "from:user@example.com"
 
-    # Mailing list management
     mborg mailinglist list
     mborg mailinglist get admin@example.com list@example.com
     mborg mailinglist add admin@example.com list@example.com secret123
@@ -844,56 +840,62 @@ mborg - Command-line interface for L<WWW::MailboxOrg>
     mborg mailinglist del_member admin@example.com list@example.com member@example.com
     mborg mailinglist list_members admin@example.com list@example.com
 
-    # Blacklist management
     mborg blacklist list admin@example.com
     mborg blacklist add admin@example.com spam@example.com
     mborg blacklist del admin@example.com spam@example.com
 
-    # Spam protection
     mborg spamprotect status admin@example.com
     mborg spamprotect set admin@example.com 1
 
-    # Video chat rooms
     mborg videochat status admin@example.com
     mborg videochat create_room admin@example.com "My Room"
     mborg videochat list_rooms admin@example.com
     mborg videochat delete_room admin@example.com "My Room"
 
-    # Backup operations
     mborg backup list admin@example.com
     mborg backup create admin@example.com
     mborg backup restore admin@example.com backup-id
     mborg backup delete admin@example.com backup-id
 
-    # Invoice operations
     mborg invoice list
     mborg invoice get admin@example.com INV-2024-001
     mborg invoice download admin@example.com INV-2024-001
 
-    # Password reset
     mborg passwordreset request user@example.com
     mborg passwordreset set user@example.com token-from-email newsecret123
 
-    # Email validation
     mborg validate email=user@example.com
 
-    # Utility functions
     mborg utils parse_headers "From: user@example.com"
     mborg utils parse_date "Mon, 01 Jan 2024 12:00:00 +0000"
     mborg utils generate_message_id
 
-    # System information
     mborg system hello
     mborg system test
     mborg system capabilities
 
-=head1 CONFIGURATION
+=head1 DESCRIPTION
 
-Create a F<~/.mailboxrc> file:
+B<mborg> is the command-line interface for L<WWW::MailboxOrg>.
+It provides access to all Mailbox.org API endpoints via subcommands.
 
-    user=user@example.com
-    password=secret
-    base_url=https://api.mailbox.org/v1
+Credentials can be provided via:
+
+=over 4
+
+=item *
+
+C<--user> and C<--password> command-line options
+
+=item *
+
+Environment variables C<MAILBOX_USER> and C<MAILBOX_PASSWORD>
+
+=item *
+
+Configuration file F<~/.mailboxrc> with C<user=> and C<password=> entries
+
+=back
 
 =head1 OPTIONS
 
@@ -924,5 +926,403 @@ Show this help message.
 Show version number.
 
 =back
+
+=head1 COMMANDS
+
+=head2 login
+
+    mborg login
+
+Authenticate with Mailbox.org API and establish a session.
+Credentials are required (see L</OPTIONS>).
+
+=head2 logout
+
+    mborg logout
+
+End the current session.
+
+=head2 account
+
+    mborg account list
+    mborg account get <email>
+    mborg account add <email> <password> <plan>
+    mborg account del <email>
+    mborg account set <email> [key=value ...]
+
+Manage Mailbox.org accounts.
+
+=over 4
+
+=item list
+
+List all accounts, optionally filtered by account.
+
+=item get
+
+Get details for a specific account.
+
+=item add
+
+Create a new account. Required: C<account>, C<password>, C<plan>
+(C<basic>, C<profi>, C<profixl>, or C<reseller>).
+
+=item del
+
+Delete an account.
+
+=item set
+
+Update account settings. At minimum C<account> is required.
+Additional parameters: C<password>, C<plan>, C<tarifflimits>,
+C<address_payment_*>, C<av_contract_accept_name>, C<memo>.
+
+=back
+
+=head2 domain
+
+    mborg domain list [account=<email>]
+    mborg domain get <domain>
+    mborg domain add <account> <domain> <password> [key=value ...]
+    mborg domain del <account> <domain>
+    mborg domain set <domain> [key=value ...]
+
+Manage domains.
+
+=over 4
+
+=item list
+
+List domains, optionally filtered by account.
+
+=item get
+
+Get details for a specific domain.
+
+=item add
+
+Add a new domain. Required: C<account>, C<domain>, C<password>.
+Optional: C<context_id>, C<create_new_context_id>, C<memo>.
+
+=item del
+
+Delete a domain.
+
+=item set
+
+Update domain settings. At minimum C<domain> is required.
+Optional: C<password>, C<context_id>, C<create_new_context_id>, C<memo>.
+
+=back
+
+=head2 mail
+
+    mborg mail list [key=value ...]
+    mborg mail find <query>
+
+Email operations.
+
+=over 4
+
+=item list
+
+List emails. Options: C<account>, C<folder>, C<order_by>, C<page>,
+C<per_page>, C<result_mode>, C<unseen_only>.
+
+=item find
+
+Search emails. Required: C<query> string.
+
+=back
+
+=head2 mailinglist
+
+    mborg mailinglist list [account=<email>]
+    mborg mailinglist get <account> <list>
+    mborg mailinglist add <account> <list> <password> [key=value ...]
+    mborg mailinglist del <account> <list>
+    mborg mailinglist set <account> <list> [key=value ...]
+    mborg mailinglist add_member <account> <list> <email>
+    mborg mailinglist del_member <account> <list> <email>
+    mborg mailinglist list_members <account> <list>
+
+Mailing list management.
+
+=over 4
+
+=item list
+
+List mailing lists, optionally filtered by account.
+
+=item get
+
+Get mailing list details.
+
+=item add
+
+Create a mailing list. Required: C<account>, C<list>, C<password>.
+Optional: C<memo>.
+
+=item del
+
+Delete a mailing list.
+
+=item set
+
+Update mailing list. Required: C<account>, C<list>.
+Optional: C<password>, C<memo>.
+
+=item add_member
+
+Add a member to a mailing list. Required: C<account>, C<list>, C<email>.
+
+=item del_member
+
+Remove a member from a mailing list.
+Required: C<account>, C<list>, C<email>.
+
+=item list_members
+
+List all members of a mailing list.
+Required: C<account>, C<list>.
+
+=back
+
+=head2 blacklist
+
+    mborg blacklist list <account>
+    mborg blacklist add <account> <email>
+    mborg blacklist del <account> <email>
+
+Manage email blacklist entries.
+
+=over 4
+
+=item list
+
+List blacklist entries for an account. Required: C<account>.
+
+=item add
+
+Add an email to the blacklist. Required: C<account>, C<email>.
+
+=item del
+
+Remove an email from the blacklist.
+Required: C<account>, C<email>.
+
+=back
+
+=head2 spamprotect
+
+    mborg spamprotect status <account>
+    mborg spamprotect set <account> <0|1>
+
+Spam protection management.
+
+=over 4
+
+=item status
+
+Get spam protection status. Required: C<account>.
+
+=item set
+
+Enable or disable spam protection.
+Required: C<account>, C<active> (C<0> or C<1>).
+
+=back
+
+=head2 videochat
+
+    mborg videochat status <account>
+    mborg videochat create_room <account> <name>
+    mborg videochat list_rooms <account>
+    mborg videochat delete_room <account> <name>
+
+Video chat room management.
+
+=over 4
+
+=item status
+
+Get video chat status. Required: C<account>.
+
+=item create_room
+
+Create a video chat room. Required: C<account>, C<name>.
+
+=item list_rooms
+
+List video chat rooms. Required: C<account>.
+
+=item delete_room
+
+Delete a video chat room. Required: C<account>, C<name>.
+
+=back
+
+=head2 backup
+
+    mborg backup list <account>
+    mborg backup create <account>
+    mborg backup restore <account> <backupid>
+    mborg backup delete <account> <backupid>
+
+Backup operations.
+
+=over 4
+
+=item list
+
+List backups for an account. Required: C<account>.
+
+=item create
+
+Create a backup. Required: C<account>.
+
+=item restore
+
+Restore a backup. Required: C<account>, C<backup>.
+
+=item delete
+
+Delete a backup. Required: C<account>, C<backup>.
+
+=back
+
+=head2 invoice
+
+    mborg invoice list [account=<email>]
+    mborg invoice get <account> <invoice>
+    mborg invoice download <account> <invoice>
+
+Invoice operations.
+
+=over 4
+
+=item list
+
+List invoices, optionally filtered by account.
+
+=item get
+
+Get invoice details. Required: C<account>, C<invoice>.
+
+=item download
+
+Download an invoice. Required: C<account>, C<invoice>.
+
+=back
+
+=head2 passwordreset
+
+    mborg passwordreset request <account>
+    mborg passwordreset set <account> <token> <newpassword>
+
+Password reset operations.
+
+=over 4
+
+=item request
+
+Request a password reset. Required: C<account>.
+
+=item set
+
+Set a new password using a reset token.
+Required: C<account>, C<token>, C<newpassword>.
+
+=back
+
+=head2 validate
+
+    mborg validate email=<address>
+
+Validate an email address.
+
+=over 4
+
+=item email
+
+Validate an email address. Required: C<email>.
+
+=back
+
+=head2 utils
+
+    mborg utils parse_headers headers=<raw>
+    mborg utils parse_date date=<string>
+    mborg utils generate_message_id [account=<email>]
+
+Utility functions.
+
+=over 4
+
+=item parse_headers
+
+Parse raw email headers. Required: C<headers>.
+
+=item parse_date
+
+Parse an email date string. Required: C<date>.
+
+=item generate_message_id
+
+Generate a message ID. Optional: C<account>.
+
+=back
+
+=head2 system
+
+    mborg system hello
+    mborg system test
+    mborg system capabilities
+
+System information.
+
+=over 4
+
+=item hello
+
+Get API hello response.
+
+=item test
+
+Test API connection.
+
+=item capabilities
+
+Get API capabilities.
+
+=back
+
+=head1 CONFIGURATION
+
+Create a F<~/.mailboxrc> file in your home directory:
+
+    user=user@example.com
+    password=secret
+    base_url=https://api.mailbox.org/v1
+
+Lines starting with C<#> are comments.
+
+=head1 ENVIRONMENT
+
+=over 4
+
+=item C<MAILBOX_USER>
+
+Mailbox.org username or email address.
+
+=item C<MAILBOX_PASSWORD>
+
+Mailbox.org password.
+
+=back
+
+=head1 SEE ALSO
+
+L<WWW::MailboxOrg>, L<https://api.mailbox.org/v1/doc/methods/index.html>
 
 =cut

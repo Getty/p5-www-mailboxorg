@@ -3,12 +3,9 @@ package WWW::MailboxOrg::API::Backup;
 # ABSTRACT: Backup API
 
 use Moo;
-use MooX::Singleton;
-use Carp qw(croak);
-use Params::ValidationCompiler qw(validation_for);
-use Types::Standard qw(Str);
-
-our $VERSION = '0.002';
+with 'WWW::MailboxOrg::Role::API';
+use Params::ValidationCompiler qw( validation_for );
+use Types::Standard qw( Str );
 
 has client => (
     is       => 'ro',
@@ -16,23 +13,9 @@ has client => (
     weak_ref => 1,
 );
 
-sub _rpc {
-    my ($self, $method, @params) = @_;
-    my $client = $self->client or croak "No client set";
-    return $client->call($method, @params);
-}
-
 my %validators = (
-    list => validation_for(
-        params => {
-            account => { type => Str, optional => 0 },
-        },
-    ),
-    create => validation_for(
-        params => {
-            account => { type => Str, optional => 0 },
-        },
-    ),
+    list    => validation_for( params => { account => { type => Str, optional => 0 } } ),
+    create  => validation_for( params => { account => { type => Str, optional => 0 } } ),
     restore => validation_for(
         params => {
             account => { type => Str, optional => 0 },
@@ -48,31 +31,31 @@ my %validators = (
 );
 
 sub list {
-    my ($self, %params) = @_;
+    my ( $self, %params ) = @_;
     my $v = $validators{'list'};
     %params = $v->(%params) if $v;
-    return $self->_rpc('backup.list', \%params);
+    return $self->_rpc( 'backup.list', \%params );
 }
 
 sub create {
-    my ($self, %params) = @_;
+    my ( $self, %params ) = @_;
     my $v = $validators{'create'};
     %params = $v->(%params) if $v;
-    return $self->_rpc('backup.create', \%params);
+    return $self->_rpc( 'backup.create', \%params );
 }
 
 sub restore {
-    my ($self, %params) = @_;
+    my ( $self, %params ) = @_;
     my $v = $validators{'restore'};
     %params = $v->(%params) if $v;
-    return $self->_rpc('backup.restore', \%params);
+    return $self->_rpc( 'backup.restore', \%params );
 }
 
 sub delete {
-    my ($self, %params) = @_;
+    my ( $self, %params ) = @_;
     my $v = $validators{'delete'};
     %params = $v->(%params) if $v;
-    return $self->_rpc('backup.delete', \%params);
+    return $self->_rpc( 'backup.delete', \%params );
 }
 
 1;
@@ -82,7 +65,6 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Backup - Backup API
-
 
 =method list
 

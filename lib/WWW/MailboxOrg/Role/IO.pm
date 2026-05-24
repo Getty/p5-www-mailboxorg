@@ -4,8 +4,6 @@ package WWW::MailboxOrg::Role::IO;
 
 use Moo::Role;
 
-our $VERSION = '0.002';
-
 requires 'call';
 
 1;

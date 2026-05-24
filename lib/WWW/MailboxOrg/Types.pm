@@ -6,8 +6,6 @@ use Type::Library -base, -declare => qw( EmailAddress DomainName );
 use Type::Utils -all;
 use Types::Standard -types;
 
-our $VERSION = '0.002';
-
 my $meta = __PACKAGE__->meta;
 
 declare EmailAddress,

@@ -3,12 +3,9 @@ package WWW::MailboxOrg::API::Mail;
 # ABSTRACT: Mail operations API
 
 use Moo;
-use MooX::Singleton;
-use Carp qw(croak);
-use Params::ValidationCompiler qw(validation_for);
-use Types::Standard qw(Str ArrayRef HashRef Bool Int);
-
-our $VERSION = '0.002';
+with 'WWW::MailboxOrg::Role::API';
+use Params::ValidationCompiler qw( validation_for );
+use Types::Standard qw( Str ArrayRef HashRef Bool Int );
 
 has client => (
     is       => 'ro',
@@ -16,43 +13,33 @@ has client => (
     weak_ref => 1,
 );
 
-sub _rpc {
-    my ($self, $method, @params) = @_;
-    my $client = $self->client or croak "No client set";
-    return $client->call($method, @params);
-}
-
 my %validators = (
-    find => validation_for(
-        params => {
-            query => { type => Str, optional => 0 },
-        },
-    ),
+    find => validation_for( params => { query => { type => Str, optional => 0 } } ),
     list => validation_for(
         params => {
-            account     => { type => Str, optional => 1 },
-            folder      => { type => Str, optional => 1 },
-            order_by    => { type => Str, optional => 1 },
-            page        => { type => Int, optional => 1 },
-            per_page    => { type => Int, optional => 1 },
-            result_mode => { type => Str, optional => 1 },
+            account     => { type => Str,  optional => 1 },
+            folder      => { type => Str,  optional => 1 },
+            order_by    => { type => Str,  optional => 1 },
+            page        => { type => Int,  optional => 1 },
+            per_page    => { type => Int,  optional => 1 },
+            result_mode => { type => Str,  optional => 1 },
             unseen_only => { type => Bool, optional => 1 },
         },
     ),
 );
 
 sub find {
-    my ($self, %params) = @_;
+    my ( $self, %params ) = @_;
     my $v = $validators{'find'};
     %params = $v->(%params) if $v;
-    return $self->_rpc('mail.find', \%params);
+    return $self->_rpc( 'mail.find', \%params );
 }
 
 sub list {
-    my ($self, %params) = @_;
+    my ( $self, %params ) = @_;
     my $v = $validators{'list'};
     %params = $v->(%params) if $v;
-    return $self->_rpc('mail.list', \%params);
+    return $self->_rpc( 'mail.list', \%params );
 }
 
 1;

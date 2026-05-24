@@ -3,24 +3,15 @@ package WWW::MailboxOrg::API::Passwordreset;
 # ABSTRACT: Password reset API
 
 use Moo;
-use MooX::Singleton;
-use Carp qw(croak);
-use Params::ValidationCompiler qw(validation_for);
-use Types::Standard qw(Str);
-
-our $VERSION = '0.002';
+with 'WWW::MailboxOrg::Role::API';
+use Params::ValidationCompiler qw( validation_for );
+use Types::Standard qw( Str );
 
 has client => (
     is       => 'ro',
     required => 1,
     weak_ref => 1,
 );
-
-sub _rpc {
-    my ($self, $method, @params) = @_;
-    my $client = $self->client or croak "No client set";
-    return $client->call($method, @params);
-}
 
 my %validators = (
     request => validation_for(
@@ -30,25 +21,25 @@ my %validators = (
     ),
     set => validation_for(
         params => {
-            account    => { type => Str, optional => 0 },
-            token     => { type => Str, optional => 0 },
+            account     => { type => Str, optional => 0 },
+            token       => { type => Str, optional => 0 },
             newpassword => { type => Str, optional => 0 },
         },
     ),
 );
 
 sub request {
-    my ($self, %params) = @_;
+    my ( $self, %params ) = @_;
     my $v = $validators{'request'};
     %params = $v->(%params) if $v;
-    return $self->_rpc('passwordreset.request', \%params);
+    return $self->_rpc( 'passwordreset.request', \%params );
 }
 
 sub set {
-    my ($self, %params) = @_;
+    my ( $self, %params ) = @_;
     my $v = $validators{'set'};
     %params = $v->(%params) if $v;
-    return $self->_rpc('passwordreset.set', \%params);
+    return $self->_rpc( 'passwordreset.set', \%params );
 }
 
 1;
@@ -59,7 +50,6 @@ __END__
 
 WWW::MailboxOrg::API::Passwordreset - Password reset API
 
-
 =method request
 
     $api->passwordreset->request(account => 'user@example.com');
@@ -69,7 +59,7 @@ Request password reset. Required: C<account>.
 =method set
 
     $api->passwordreset->set(
-        account      => 'user@example.com',
+        account     => 'user@example.com',
         token        => 'reset-token-from-email',
         newpassword  => 'newsecret123',
     );

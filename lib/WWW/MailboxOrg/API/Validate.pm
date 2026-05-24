@@ -3,24 +3,15 @@ package WWW::MailboxOrg::API::Validate;
 # ABSTRACT: Validation API
 
 use Moo;
-use MooX::Singleton;
-use Carp qw(croak);
-use Params::ValidationCompiler qw(validation_for);
+with 'WWW::MailboxOrg::Role::API';
+use Params::ValidationCompiler qw( validation_for );
 use Types::Standard qw(Str);
-
-our $VERSION = '0.002';
 
 has client => (
     is       => 'ro',
     required => 1,
     weak_ref => 1,
 );
-
-sub _rpc {
-    my ($self, $method, @params) = @_;
-    my $client = $self->client or croak "No client set";
-    return $client->call($method, @params);
-}
 
 my %validators = (
     email => validation_for(
@@ -31,10 +22,10 @@ my %validators = (
 );
 
 sub email {
-    my ($self, %params) = @_;
+    my ( $self, %params ) = @_;
     my $v = $validators{'email'};
     %params = $v->(%params) if $v;
-    return $self->_rpc('validate.email', \%params);
+    return $self->_rpc( 'validate.email', \%params );
 }
 
 1;
@@ -44,7 +35,6 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Validate - Validation API
-
 
 =method email
 

@@ -21,6 +21,14 @@ my %validators = (
     ),
 );
 
+=method email
+
+    my $result = $api->validate->email(email => 'user@example.com');
+
+Validate an email address. Required: C<email>.
+
+=cut
+
 sub email {
     my ( $self, %params ) = @_;
     my $v = $validators{'email'};
@@ -35,11 +43,5 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Validate - Validation API
-
-=method email
-
-    my $result = $api->validate->email(email => 'user@example.com');
-
-Validate an email address. Required: C<email>.
 
 =cut

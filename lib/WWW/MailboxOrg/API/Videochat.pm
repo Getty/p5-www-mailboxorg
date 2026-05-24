@@ -30,12 +30,31 @@ my %validators = (
     ),
 );
 
+=method status
+
+    my $status = $api->videochat->status(account => 'admin@example.com');
+
+Get video chat status. Required: C<account>.
+
+=cut
+
 sub status {
     my ( $self, %params ) = @_;
     my $v = $validators{'status'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'videochat.status', \%params );
 }
+
+=method create_room
+
+    $api->videochat->create_room(
+        account => 'admin@example.com',
+        name    => 'My Room',
+    );
+
+Create a video chat room. Required: C<account>, C<name>.
+
+=cut
 
 sub create_room {
     my ( $self, %params ) = @_;
@@ -44,12 +63,31 @@ sub create_room {
     return $self->_rpc( 'videochat.create_room', \%params );
 }
 
+=method list_rooms
+
+    $api->videochat->list_rooms(account => 'admin@example.com');
+
+List video chat rooms. Required: C<account>.
+
+=cut
+
 sub list_rooms {
     my ( $self, %params ) = @_;
     my $v = $validators{'list_rooms'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'videochat.list_rooms', \%params );
 }
+
+=method delete_room
+
+    $api->videochat->delete_room(
+        account => 'admin@example.com',
+        name    => 'My Room',
+    );
+
+Delete a video chat room. Required: C<account>, C<name>.
+
+=cut
 
 sub delete_room {
     my ( $self, %params ) = @_;
@@ -65,35 +103,5 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Videochat - Video chat API
-
-=method status
-
-    my $status = $api->videochat->status(account => 'admin@example.com');
-
-Get video chat status. Required: C<account>.
-
-=method create_room
-
-    $api->videochat->create_room(
-        account => 'admin@example.com',
-        name    => 'My Room',
-    );
-
-Create a video chat room. Required: C<account>, C<name>.
-
-=method list_rooms
-
-    $api->videochat->list_rooms(account => 'admin@example.com');
-
-List video chat rooms. Required: C<account>.
-
-=method delete_room
-
-    $api->videochat->delete_room(
-        account => 'admin@example.com',
-        name    => 'My Room',
-    );
-
-Delete a video chat room. Required: C<account>, C<name>.
 
 =cut

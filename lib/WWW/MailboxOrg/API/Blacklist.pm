@@ -33,6 +33,17 @@ my %validators = (
     ),
 );
 
+=method add
+
+    $api->blacklist->add(
+        account => 'admin@example.com',
+        email   => 'spam@example.com',
+    );
+
+Add an email to blacklist. Required: C<account>, C<email>.
+
+=cut
+
 sub add {
     my ( $self, %params ) = @_;
     my $v = $validators{'add'};
@@ -40,12 +51,31 @@ sub add {
     return $self->_rpc( 'blacklist.add', \%params );
 }
 
+=method del
+
+    $api->blacklist->del(
+        account => 'admin@example.com',
+        email   => 'spam@example.com',
+    );
+
+Remove an email from blacklist.
+
+=cut
+
 sub del {
     my ( $self, %params ) = @_;
     my $v = $validators{'del'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'blacklist.del', \%params );
 }
+
+=method list
+
+    $api->blacklist->list(account => 'admin@example.com');
+
+List blacklist entries. Required: C<account>.
+
+=cut
 
 sub list {
     my ( $self, %params ) = @_;
@@ -61,29 +91,5 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Blacklist - Blacklist API
-
-=method add
-
-    $api->blacklist->add(
-        account => 'admin@example.com',
-        email   => 'spam@example.com',
-    );
-
-Add an email to blacklist. Required: C<account>, C<email>.
-
-=method del
-
-    $api->blacklist->del(
-        account => 'admin@example.com',
-        email   => 'spam@example.com',
-    );
-
-Remove an email from blacklist.
-
-=method list
-
-    $api->blacklist->list(account => 'admin@example.com');
-
-List blacklist entries. Required: C<account>.
 
 =cut

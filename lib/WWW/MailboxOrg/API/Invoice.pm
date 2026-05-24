@@ -29,6 +29,15 @@ my %validators = (
     ),
 );
 
+=method list
+
+    my $invoices = $api->invoice->list;
+    $api->invoice->list(account => 'admin@example.com');
+
+List invoices. Optional C<account> filter.
+
+=cut
+
 sub list {
     my ( $self, %params ) = @_;
     my $v = $validators{'list'};
@@ -36,12 +45,34 @@ sub list {
     return $self->_rpc( 'invoice.list', \%params );
 }
 
+=method get
+
+    $api->invoice->get(
+        account => 'admin@example.com',
+        invoice => 'INV-2024-001',
+    );
+
+Get invoice details. Required: C<account>, C<invoice>.
+
+=cut
+
 sub get {
     my ( $self, %params ) = @_;
     my $v = $validators{'get'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'invoice.get', \%params );
 }
+
+=method download
+
+    $api->invoice->download(
+        account => 'admin@example.com',
+        invoice => 'INV-2024-001',
+    );
+
+Download an invoice. Required: C<account>, C<invoice>.
+
+=cut
 
 sub download {
     my ( $self, %params ) = @_;
@@ -57,30 +88,5 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Invoice - Invoice API
-
-=method list
-
-    my $invoices = $api->invoice->list;
-    $api->invoice->list(account => 'admin@example.com');
-
-List invoices. Optional C<account> filter.
-
-=method get
-
-    $api->invoice->get(
-        account => 'admin@example.com',
-        invoice => 'INV-2024-001',
-    );
-
-Get invoice details. Required: C<account>, C<invoice>.
-
-=method download
-
-    $api->invoice->download(
-        account => 'admin@example.com',
-        invoice => 'INV-2024-001',
-    );
-
-Download an invoice. Required: C<account>, C<invoice>.
 
 =cut

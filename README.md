@@ -82,9 +82,8 @@ The `mborg` command-line tool is included:
 
 ## Mail
 
-- `mail->list(folder => 'INBOX', unseen_only => 1)` - List emails
+- `mail->list(folder => 'INBOX', unseen_only => 1)` - List emails in a folder
 - `mail->find(query => 'from:user@example.com')` - Search emails
-- `mail->fetch(mail_id => 123)` - Fetch email by ID
 
 ## System
 

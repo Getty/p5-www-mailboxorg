@@ -49,12 +49,38 @@ my %validators = (
     ),
 );
 
+=method add
+
+    $api->domain->add(
+        account               => 'admin@example.com',
+        domain               => 'example.com',
+        password             => 'secret123',
+        context_id           => 'optional-context-id',
+        create_new_context_id => 1,
+        memo                 => 'Optional note',
+    );
+
+Add a new domain. Required: C<account>, C<domain>, C<password>.
+
+=cut
+
 sub add {
     my ( $self, %params ) = @_;
     my $v = $validators{'add'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'domain.add', \%params );
 }
+
+=method del
+
+    $api->domain->del(
+        account => 'admin@example.com',
+        domain  => 'example.com',
+    );
+
+Delete a domain.
+
+=cut
 
 sub del {
     my ( $self, %params ) = @_;
@@ -63,6 +89,14 @@ sub del {
     return $self->_rpc( 'domain.del', \%params );
 }
 
+=method get
+
+    $api->domain->get(domain => 'example.com');
+
+Get domain details.
+
+=cut
+
 sub get {
     my ( $self, %params ) = @_;
     my $v = $validators{'get'};
@@ -70,12 +104,35 @@ sub get {
     return $self->_rpc( 'domain.get', \%params );
 }
 
+=method list
+
+    $api->domain->list;
+    $api->domain->list(account => 'admin@example.com');
+
+List domains. Optional C<account> or C<filter>.
+
+=cut
+
 sub list {
     my ( $self, %params ) = @_;
     my $v = $validators{'list'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'domain.list', \%params );
 }
+
+=method set
+
+    $api->domain->set(
+        domain                => 'example.com',
+        password              => 'newsecret',
+        context_id            => 'new-context-id',
+        create_new_context_id => 1,
+        memo                  => 'Updated note',
+    );
+
+Update domain settings. At least C<domain> required.
+
+=cut
 
 sub set {
     my ( $self, %params ) = @_;
@@ -91,52 +148,5 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Domain - Domain management API
-
-=method add
-
-    $api->domain->add(
-        account               => 'admin@example.com',
-        domain               => 'example.com',
-        password             => 'secret123',
-        context_id           => 'optional-context-id',
-        create_new_context_id => 1,
-        memo                 => 'Optional note',
-    );
-
-Add a new domain. Required: C<account>, C<domain>, C<password>.
-
-=method del
-
-    $api->domain->del(
-        account => 'admin@example.com',
-        domain  => 'example.com',
-    );
-
-Delete a domain.
-
-=method get
-
-    $api->domain->get(domain => 'example.com');
-
-Get domain details.
-
-=method list
-
-    $api->domain->list;
-    $api->domain->list(account => 'admin@example.com');
-
-List domains. Optional C<account> or C<filter>.
-
-=method set
-
-    $api->domain->set(
-        domain                => 'example.com',
-        password              => 'newsecret',
-        context_id            => 'new-context-id',
-        create_new_context_id => 1,
-        memo                  => 'Updated note',
-    );
-
-Update domain settings. At least C<domain> required.
 
 =cut

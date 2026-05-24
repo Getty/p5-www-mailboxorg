@@ -1,5 +1,15 @@
 {{$NEXT}}
 
+0.002     2026-05-24
+
+  - Refactor: extract shared _rpc method into WWW::MailboxOrg::Role::API
+  - POD: move =method documentation inline above each method definition
+    (replaces =method blocks in __END__ sections)
+  - POD: add =attr inline above attribute declarations in main class
+  - mborg CLI: add =method POD for all subcommands (login, logout,
+    account, domain, mail, mailinglist, blacklist, spamprotect,
+    videochat, backup, invoice, passwordreset, validate, utils, system)
+
 0.001     2026-05-07 03:36:59Z
 
   - Initial release with full Mailbox.org API support

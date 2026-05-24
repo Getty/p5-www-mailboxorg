@@ -21,9 +21,9 @@ my @config_files = (
 my $config = {};
 
 for my $file (@config_files) {
-    if (path($file)->exists) {
+    if ( path($file)->exists ) {
         my $content = path($file)->slurp_utf8;
-        for my $line (split /\n/, $content) {
+        for my $line ( split /\n/, $content ) {
             $line =~ s/\s*#.*//;
             if ( $line =~ /^\s*(\w+)\s*=\s*(.+)\s*$/ ) {
                 $config->{$1} = $2;
@@ -34,29 +34,29 @@ for my $file (@config_files) {
 
 my ( $opt, $usage ) = describe_options(
     '%c %o [command] [options]',
-    [ 'user|u=s',    'Mailbox.org username or email', { default => $config->{user} } ],
-    [ 'password|p=s', 'Mailbox.org password',         { default => $config->{password} } ],
-    [ 'base_url|b=s', 'API base URL',                 { default => $config->{base_url} // 'https://api.mailbox.org/v1' } ],
-    [ 'verbose|v',   'Be verbose' ],
-    [ 'help|h',      'Show help' ],
-    [ 'version|V',   'Show version' ],
+    [ 'user|u=s',     'Mailbox.org username or email', { default => $config->{user} } ],
+    [ 'password|p=s', 'Mailbox.org password',          { default => $config->{password} } ],
+    [ 'base_url|b=s', 'API base URL',                  { default => $config->{base_url} // 'https://api.mailbox.org/v1' } ],
+    [ 'verbose|v',    'Be verbose' ],
+    [ 'help|h',       'Show help' ],
+    [ 'version|V',    'Show version' ],
     [],
     [ 'Commands:' ],
-    [ 'login',    'Login to Mailbox.org API' ],
-    [ 'logout',   'Logout from Mailbox.org API' ],
-    [ 'account',  'Account management (list, get, add, del, set)' ],
-    [ 'domain',   'Domain management (list, get, add, del, set)' ],
-    [ 'mail',     'Mail operations (list, find)' ],
-    [ 'mailinglist', 'Mailing list management' ],
-    [ 'blacklist',   'Blacklist management' ],
-    [ 'spamprotect', 'Spam protection (status, set)' ],
-    [ 'videochat',   'Video chat rooms (status, create_room, list_rooms, delete_room)' ],
-    [ 'backup',   'Backup operations (list, create, restore, delete)' ],
-    [ 'invoice',  'Invoice operations (list, get, download)' ],
+    [ 'login',        'Login to Mailbox.org API' ],
+    [ 'logout',       'Logout from Mailbox.org API' ],
+    [ 'account',      'Account management (list, get, add, del, set)' ],
+    [ 'domain',       'Domain management (list, get, add, del, set)' ],
+    [ 'mail',         'Mail operations (list, find)' ],
+    [ 'mailinglist',  'Mailing list management' ],
+    [ 'blacklist',    'Blacklist management' ],
+    [ 'spamprotect',  'Spam protection (status, set)' ],
+    [ 'videochat',    'Video chat rooms (status, create_room, list_rooms, delete_room)' ],
+    [ 'backup',       'Backup operations (list, create, restore, delete)' ],
+    [ 'invoice',      'Invoice operations (list, get, download)' ],
     [ 'passwordreset', 'Password reset (request, set)' ],
-    [ 'validate', 'Validate email address' ],
-    [ 'utils',    'Utils (parse_headers, parse_date, generate_message_id)' ],
-    [ 'system',   'System info (hello, test, capabilities)' ],
+    [ 'validate',     'Validate email address' ],
+    [ 'utils',        'Utils (parse_headers, parse_date, generate_message_id)' ],
+    [ 'system',       'System info (hello, test, capabilities)' ],
 );
 
 if ( $opt->help ) {
@@ -86,7 +86,7 @@ if ( !$api_options{user} && !$api_options{password} && $command eq 'login' ) {
     $api_options{user} = $user;
 
     print "Enter Mailbox.org password: ";
-    system( 'stty -echo' );
+    system('stty -echo');
     my $pass = <STDIN>;
     system('stty echo');
     chomp $pass;
@@ -112,7 +112,7 @@ sub pp {
 
 sub cmd_account_list {
     my @args = @_;
-    my $result = $api->account->list(@args ? @args : ());
+    my $result = $api->account->list( @args ? @args : () );
     pp($result);
 }
 
@@ -470,7 +470,7 @@ sub cmd_utils_parse_date {
 
 sub cmd_utils_generate_message_id {
     my %args = @_;
-    my $result = $api->utils->generate_message_id(%args ? %args : ());
+    my $result = $api->utils->generate_message_id( %args ? %args : () );
     pp($result);
 }
 
@@ -791,8 +791,8 @@ elsif ( $command eq 'utils' ) {
 }
 elsif ( $command eq 'system' ) {
     my $subcmd = shift @ARGV or die "Usage: mborg system [hello|test|capabilities]\n";
-    if ( $subcmd eq 'hello' )       { cmd_system_hello; }
-    elsif ( $subcmd eq 'test' )     { cmd_system_test; }
+    if ( $subcmd eq 'hello' )           { cmd_system_hello; }
+    elsif ( $subcmd eq 'test' )        { cmd_system_test; }
     elsif ( $subcmd eq 'capabilities' ) { cmd_system_capabilities; }
     else { die "Unknown system subcommand: $subcmd\n"; }
 }
@@ -929,20 +929,20 @@ Show version number.
 
 =head1 COMMANDS
 
-=head2 login
+=method login
 
     mborg login
 
 Authenticate with Mailbox.org API and establish a session.
 Credentials are required (see L</OPTIONS>).
 
-=head2 logout
+=method logout
 
     mborg logout
 
 End the current session.
 
-=head2 account
+=method account
 
     mborg account list
     mborg account get <email>
@@ -979,7 +979,7 @@ C<address_payment_*>, C<av_contract_accept_name>, C<memo>.
 
 =back
 
-=head2 domain
+=method domain
 
     mborg domain list [account=<email>]
     mborg domain get <domain>
@@ -1015,7 +1015,7 @@ Optional: C<password>, C<context_id>, C<create_new_context_id>, C<memo>.
 
 =back
 
-=head2 mail
+=method mail
 
     mborg mail list [key=value ...]
     mborg mail find <query>
@@ -1035,7 +1035,7 @@ Search emails. Required: C<query> string.
 
 =back
 
-=head2 mailinglist
+=method mailinglist
 
     mborg mailinglist list [account=<email>]
     mborg mailinglist get <account> <list>
@@ -1088,7 +1088,7 @@ Required: C<account>, C<list>.
 
 =back
 
-=head2 blacklist
+=method blacklist
 
     mborg blacklist list <account>
     mborg blacklist add <account> <email>
@@ -1113,7 +1113,7 @@ Required: C<account>, C<email>.
 
 =back
 
-=head2 spamprotect
+=method spamprotect
 
     mborg spamprotect status <account>
     mborg spamprotect set <account> <0|1>
@@ -1133,7 +1133,7 @@ Required: C<account>, C<active> (C<0> or C<1>).
 
 =back
 
-=head2 videochat
+=method videochat
 
     mborg videochat status <account>
     mborg videochat create_room <account> <name>
@@ -1162,7 +1162,7 @@ Delete a video chat room. Required: C<account>, C<name>.
 
 =back
 
-=head2 backup
+=method backup
 
     mborg backup list <account>
     mborg backup create <account>
@@ -1191,7 +1191,7 @@ Delete a backup. Required: C<account>, C<backup>.
 
 =back
 
-=head2 invoice
+=method invoice
 
     mborg invoice list [account=<email>]
     mborg invoice get <account> <invoice>
@@ -1215,7 +1215,7 @@ Download an invoice. Required: C<account>, C<invoice>.
 
 =back
 
-=head2 passwordreset
+=method passwordreset
 
     mborg passwordreset request <account>
     mborg passwordreset set <account> <token> <newpassword>
@@ -1235,7 +1235,7 @@ Required: C<account>, C<token>, C<newpassword>.
 
 =back
 
-=head2 validate
+=method validate
 
     mborg validate email=<address>
 
@@ -1249,7 +1249,7 @@ Validate an email address. Required: C<email>.
 
 =back
 
-=head2 utils
+=method utils
 
     mborg utils parse_headers headers=<raw>
     mborg utils parse_date date=<string>
@@ -1273,7 +1273,7 @@ Generate a message ID. Optional: C<account>.
 
 =back
 
-=head2 system
+=method system
 
     mborg system hello
     mborg system test

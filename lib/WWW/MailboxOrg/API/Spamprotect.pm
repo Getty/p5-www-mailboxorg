@@ -27,12 +27,31 @@ my %validators = (
     ),
 );
 
+=method status
+
+    my $status = $api->spamprotect->status(account => 'admin@example.com');
+
+Get spam protection status. Required: C<account>.
+
+=cut
+
 sub status {
     my ( $self, %params ) = @_;
     my $v = $validators{'status'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'spamprotect.status', \%params );
 }
+
+=method set
+
+    $api->spamprotect->set(
+        account => 'admin@example.com',
+        active  => 1,
+    );
+
+Enable or disable spam protection. Required: C<account>, C<active>.
+
+=cut
 
 sub set {
     my ( $self, %params ) = @_;
@@ -48,20 +67,5 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Spamprotect - Spam protection API
-
-=method status
-
-    my $status = $api->spamprotect->status(account => 'admin@example.com');
-
-Get spam protection status. Required: C<account>.
-
-=method set
-
-    $api->spamprotect->set(
-        account => 'admin@example.com',
-        active  => 1,
-    );
-
-Enable or disable spam protection. Required: C<account>, C<active>.
 
 =cut

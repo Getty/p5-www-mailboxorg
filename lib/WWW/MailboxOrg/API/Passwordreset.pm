@@ -28,12 +28,32 @@ my %validators = (
     ),
 );
 
+=method request
+
+    $api->passwordreset->request(account => 'user@example.com');
+
+Request password reset. Required: C<account>.
+
+=cut
+
 sub request {
     my ( $self, %params ) = @_;
     my $v = $validators{'request'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'passwordreset.request', \%params );
 }
+
+=method set
+
+    $api->passwordreset->set(
+        account     => 'user@example.com',
+        token       => 'reset-token-from-email',
+        newpassword => 'newsecret123',
+    );
+
+Set new password. Required: C<account>, C<token>, C<newpassword>.
+
+=cut
 
 sub set {
     my ( $self, %params ) = @_;
@@ -49,21 +69,5 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Passwordreset - Password reset API
-
-=method request
-
-    $api->passwordreset->request(account => 'user@example.com');
-
-Request password reset. Required: C<account>.
-
-=method set
-
-    $api->passwordreset->set(
-        account     => 'user@example.com',
-        token        => 'reset-token-from-email',
-        newpassword  => 'newsecret123',
-    );
-
-Set new password. Required: C<account>, C<token>, C<newpassword>.
 
 =cut

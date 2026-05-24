@@ -30,12 +30,28 @@ my %validators = (
     ),
 );
 
+=method list
+
+    my $backups = $api->backup->list(account => 'admin@example.com');
+
+List backups. Required: C<account>.
+
+=cut
+
 sub list {
     my ( $self, %params ) = @_;
     my $v = $validators{'list'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'backup.list', \%params );
 }
+
+=method create
+
+    $api->backup->create(account => 'admin@example.com');
+
+Create a backup. Required: C<account>.
+
+=cut
 
 sub create {
     my ( $self, %params ) = @_;
@@ -44,12 +60,34 @@ sub create {
     return $self->_rpc( 'backup.create', \%params );
 }
 
+=method restore
+
+    $api->backup->restore(
+        account => 'admin@example.com',
+        backup  => 'backup-id',
+    );
+
+Restore a backup. Required: C<account>, C<backup>.
+
+=cut
+
 sub restore {
     my ( $self, %params ) = @_;
     my $v = $validators{'restore'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'backup.restore', \%params );
 }
+
+=method delete
+
+    $api->backup->delete(
+        account => 'admin@example.com',
+        backup  => 'backup-id',
+    );
+
+Delete a backup. Required: C<account>, C<backup>.
+
+=cut
 
 sub delete {
     my ( $self, %params ) = @_;
@@ -65,35 +103,5 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Backup - Backup API
-
-=method list
-
-    my $backups = $api->backup->list(account => 'admin@example.com');
-
-List backups. Required: C<account>.
-
-=method create
-
-    $api->backup->create(account => 'admin@example.com');
-
-Create a backup. Required: C<account>.
-
-=method restore
-
-    $api->backup->restore(
-        account => 'admin@example.com',
-        backup  => 'backup-id',
-    );
-
-Restore a backup. Required: C<account>, C<backup>.
-
-=method delete
-
-    $api->backup->delete(
-        account => 'admin@example.com',
-        backup  => 'backup-id',
-    );
-
-Delete a backup. Required: C<account>, C<backup>.
 
 =cut

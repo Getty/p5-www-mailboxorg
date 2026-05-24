@@ -44,12 +44,34 @@ my %validators = (
     ),
 );
 
+=method add
+
+    $api->account->add(
+        account      => 'user@example.com',
+        password     => 'secret123',
+        plan         => 'basic',
+        tarifflimits => { ... },
+        memo         => 'Optional note',
+    );
+
+Add a new account. Required: C<account>, C<password>, C<plan>.
+
+=cut
+
 sub add {
     my ( $self, %params ) = @_;
     my $v = $validators{'add'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'account.add', \%params );
 }
+
+=method del
+
+    $api->account->del(account => 'user@example.com');
+
+Delete an account.
+
+=cut
 
 sub del {
     my ( $self, %params ) = @_;
@@ -58,6 +80,14 @@ sub del {
     return $self->_rpc( 'account.del', \%params );
 }
 
+=method get
+
+    $api->account->get(account => 'user@example.com');
+
+Get account details.
+
+=cut
+
 sub get {
     my ( $self, %params ) = @_;
     my $v = $validators{'get'};
@@ -65,12 +95,33 @@ sub get {
     return $self->_rpc( 'account.get', \%params );
 }
 
+=method list
+
+    $api->account->list;
+    $api->account->list(account => 'admin@example.com');
+
+List accounts. Optional C<account> filter.
+
+=cut
+
 sub list {
     my ( $self, %params ) = @_;
     my $v = $validators{'list'};
     %params = $v->(%params) if $v;
     return $self->_rpc( 'account.list', \%params );
 }
+
+=method set
+
+    $api->account->set(
+        account => 'user@example.com',
+        plan    => 'profi',
+        memo    => 'Updated note',
+    );
+
+Update account settings. At least C<account> required.
+
+=cut
 
 sub set {
     my ( $self, %params ) = @_;
@@ -86,46 +137,5 @@ __END__
 =head1 NAME
 
 WWW::MailboxOrg::API::Account - Account management API
-
-=method add
-
-    $api->account->add(
-        account      => 'user@example.com',
-        password     => 'secret123',
-        plan         => 'basic',
-        tarifflimits => { ... },
-        memo         => 'Optional note',
-    );
-
-Add a new account. Required: C<account>, C<password>, C<plan>.
-
-=method del
-
-    $api->account->del(account => 'user@example.com');
-
-Delete an account.
-
-=method get
-
-    $api->account->get(account => 'user@example.com');
-
-Get account details.
-
-=method list
-
-    $api->account->list;
-    $api->account->list(account => 'admin@example.com');
-
-List accounts. Optional C<account> filter.
-
-=method set
-
-    $api->account->set(
-        account => 'user@example.com',
-        plan    => 'profi',
-        memo    => 'Updated note',
-    );
-
-Update account settings. At least C<account> required.
 
 =cut

@@ -1,4 +1,4 @@
-{{$NEXT}}
+0.100     2026-05-25 21:05:48Z
 
   - Refactor: extract shared _rpc method into WWW::MailboxOrg::Role::API
   - POD: move =method documentation inline above each method definition

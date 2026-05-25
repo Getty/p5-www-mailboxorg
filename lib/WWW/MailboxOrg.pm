@@ -20,7 +20,7 @@ use WWW::MailboxOrg::API::Utils;
 use WWW::MailboxOrg::API::System;
 use namespace::clean;
 
-our $VERSION = '0.003';
+our $VERSION = '0.101';
 
 has user => (
     is       => 'ro',

@@ -214,11 +214,3 @@ sub list_members {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::Mailinglist - Mailing list API
-
-=cut

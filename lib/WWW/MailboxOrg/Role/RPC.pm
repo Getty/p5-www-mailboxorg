@@ -13,11 +13,3 @@ sub _rpc {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::Role::RPC - Role for RPC API controllers
-
-=cut

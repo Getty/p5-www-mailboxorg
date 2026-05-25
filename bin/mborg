@@ -36,7 +36,7 @@ my ( $opt, $usage ) = describe_options(
     '%c %o [command] [options]',
     [ 'user|u=s',     'Mailbox.org username or email', { default => $config->{user} } ],
     [ 'password|p=s', 'Mailbox.org password',          { default => $config->{password} } ],
-    [ 'base_url|b=s', 'API base URL',                  { default => $config->{base_url} // 'https://api.mailbox.org/v1' } ],
+    [ 'base_url|b=s', 'API base URL',                  { default => $config->{base_url} // $ENV{WWW_MAILBOXORG_BASE_URL} // 'https://api.mailbox.org/v1' } ],
     [ 'verbose|v',    'Be verbose' ],
     [ 'help|h',       'Show help' ],
     [ 'version|V',    'Show version' ],
@@ -74,8 +74,8 @@ if ( !@ARGV ) {
 
 my $command = shift @ARGV;
 my %api_options = (
-    user     => $opt->user     // $ENV{MAILBOX_USER},
-    password => $opt->password // $ENV{MAILBOX_PASSWORD},
+    user     => $opt->user     // $ENV{WWW_MAILBOXORG_USER},
+    password => $opt->password // $ENV{WWW_MAILBOXORG_PASSWORD},
     base_url => $opt->base_url,
 );
 
@@ -95,7 +95,7 @@ if ( !$api_options{user} && !$api_options{password} && $command eq 'login' ) {
 }
 
 if ( !$api_options{user} || !$api_options{password} ) {
-    die "Error: user and password required. Use --user and --password, or set MAILBOX_USER/MAILBOX_PASSWORD environment variables.\n";
+    die "Error: user and password required. Use --user and --password, or set WWW_MAILBOXORG_USER/WWW_MAILBOXORG_PASSWORD environment variables.\n";
 }
 
 my $api = WWW::MailboxOrg->new(%api_options);
@@ -811,7 +811,7 @@ mborg - Command-line interface for L<WWW::MailboxOrg>
     mborg --user=user@example.com --password=secret login
 
     # Credentials via environment
-    MAILBOX_USER=user@example.com MAILBOX_PASSWORD=secret mborg login
+    WWW_MAILBOXORG_USER=user@example.com WWW_MAILBOXORG_PASSWORD=secret mborg login
 
     # Credentials via config file (~/.mailboxrc)
     mborg login
@@ -889,7 +889,7 @@ C<--user> and C<--password> command-line options
 
 =item *
 
-Environment variables C<MAILBOX_USER> and C<MAILBOX_PASSWORD>
+Environment variables C<WWW_MAILBOXORG_USER> and C<WWW_MAILBOXORG_PASSWORD>
 
 =item *
 
@@ -1309,15 +1309,22 @@ Lines starting with C<#> are comments.
 
 =head1 ENVIRONMENT
 
+All environment variables are namespaced with the C<WWW_MAILBOXORG_> prefix.
+Command-line options and the F<~/.mailboxrc> config file take precedence.
+
 =over 4
 
-=item C<MAILBOX_USER>
+=item C<WWW_MAILBOXORG_USER>
 
 Mailbox.org username or email address.
 
-=item C<MAILBOX_PASSWORD>
+=item C<WWW_MAILBOXORG_PASSWORD>
 
 Mailbox.org password.
+
+=item C<WWW_MAILBOXORG_BASE_URL>
+
+API base URL. Defaults to C<https://api.mailbox.org/v1>.
 
 =back
 

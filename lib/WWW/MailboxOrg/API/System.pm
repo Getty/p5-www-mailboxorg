@@ -42,11 +42,3 @@ Get API capabilities. Returns capability list.
 sub capabilities { shift->_rpc('capabilities') }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::System - System API (hello, test, capabilities)
-
-=cut

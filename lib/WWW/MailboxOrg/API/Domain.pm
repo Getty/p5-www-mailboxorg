@@ -142,11 +142,3 @@ sub set {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::Domain - Domain management API
-
-=cut

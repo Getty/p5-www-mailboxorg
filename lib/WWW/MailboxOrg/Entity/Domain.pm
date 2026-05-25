@@ -45,8 +45,9 @@ Whether the domain is active.
 =cut
 
 has data => (
-    is       => 'ro',
-    builder  => '_build_data',
+    is      => 'ro',
+    lazy    => 1,
+    builder => '_build_data',
 );
 
 sub _build_data {
@@ -67,10 +68,6 @@ Returns a hashref of the entity data.
 1;
 
 __END__
-
-=head1 NAME
-
-WWW::MailboxOrg::Entity::Domain - Domain entity object
 
 =head1 SEE ALSO
 

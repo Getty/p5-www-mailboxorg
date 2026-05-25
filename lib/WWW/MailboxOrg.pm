@@ -70,6 +70,18 @@ Defaults to C<https://api.mailbox.org/v1>.
 
 =cut
 
+around BUILDARGS => sub {
+    my ( $orig, $class, @args ) = @_;
+    my $args = $class->$orig( @args );
+
+    $args->{user}     = $ENV{WWW_MAILBOXORG_USER}     if !defined $args->{user}     && defined $ENV{WWW_MAILBOXORG_USER};
+    $args->{password} = $ENV{WWW_MAILBOXORG_PASSWORD} if !defined $args->{password} && defined $ENV{WWW_MAILBOXORG_PASSWORD};
+    $args->{base_url} = $ENV{WWW_MAILBOXORG_BASE_URL} if !defined $args->{base_url} && defined $ENV{WWW_MAILBOXORG_BASE_URL};
+    $args->{token}    = $ENV{WWW_MAILBOXORG_TOKEN}    if !defined $args->{token}    && defined $ENV{WWW_MAILBOXORG_TOKEN};
+
+    return $args;
+};
+
 with 'WWW::MailboxOrg::Role::HTTP';
 
 sub _set_auth_header {
@@ -115,7 +127,7 @@ sub logout {
     my ($self) = @_;
 
     $self->call('deauth') if $self->token;
-    $self->_clear_token;
+    $self->clear_token;
 }
 
 sub DEMOLISH {
@@ -283,10 +295,6 @@ Returns L<WWW::MailboxOrg::API::System> for system info (hello, test).
 
 __END__
 
-=head1 NAME
-
-WWW::MailboxOrg - Perl client for Mailbox.org API
-
 =head1 SYNOPSIS
 
     use WWW::MailboxOrg;
@@ -307,13 +315,26 @@ Uses JSON-RPC 2.0 over HTTPS with session-based authentication.
 
 =head1 ENVIRONMENT
 
-=env MAILBOX_USER
+All environment variables are namespaced with the C<WWW_MAILBOXORG_> prefix,
+reflecting the module namespace. A value passed explicitly to L</new> always
+takes precedence over the corresponding environment variable.
 
-Alternative to passing C<user> to L</new>.
+=env WWW_MAILBOXORG_USER
 
-=env MAILBOX_PASSWORD
+Default for L</user> when not passed to L</new>.
 
-Alternative to passing C<password> to L</new>.
+=env WWW_MAILBOXORG_PASSWORD
+
+Default for L</password> when not passed to L</new>.
+
+=env WWW_MAILBOXORG_BASE_URL
+
+Default for L</base_url> when not passed to L</new>.
+
+=env WWW_MAILBOXORG_TOKEN
+
+Pre-set session L</token> when not passed to L</new>. Lets you reuse an
+existing session instead of calling L</login>.
 
 =head1 SEE ALSO
 

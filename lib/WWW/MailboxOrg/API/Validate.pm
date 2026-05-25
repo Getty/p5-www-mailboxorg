@@ -37,11 +37,3 @@ sub email {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::Validate - Validation API
-
-=cut

@@ -85,11 +85,3 @@ sub list {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::Blacklist - Blacklist API
-
-=cut

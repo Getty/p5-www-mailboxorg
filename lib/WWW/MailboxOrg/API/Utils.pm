@@ -68,11 +68,3 @@ sub generate_message_id {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::Utils - Utility API
-
-=cut

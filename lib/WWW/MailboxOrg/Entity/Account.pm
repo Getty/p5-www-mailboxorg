@@ -67,8 +67,9 @@ Whether the account is locked.
 =cut
 
 has data => (
-    is       => 'ro',
-    builder  => '_build_data',
+    is      => 'ro',
+    lazy    => 1,
+    builder => '_build_data',
 );
 
 sub _build_data {
@@ -91,10 +92,6 @@ Returns a hashref of the entity data.
 1;
 
 __END__
-
-=head1 NAME
-
-WWW::MailboxOrg::Entity::Account - Account entity object
 
 =head1 SEE ALSO
 

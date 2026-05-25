@@ -97,11 +97,3 @@ sub delete_room {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::Videochat - Video chat API
-
-=cut

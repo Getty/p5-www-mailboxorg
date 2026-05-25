@@ -82,11 +82,3 @@ sub download {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::Invoice - Invoice API
-
-=cut

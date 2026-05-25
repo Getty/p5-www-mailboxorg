@@ -5,10 +5,6 @@ package WWW::MailboxOrg::Role::API;
 use Moo::Role;
 use Carp qw(croak);
 
-=head1 NAME
-
-WWW::MailboxOrg::Role::API - Shared API controller behavior
-
 =head1 DESCRIPTION
 
 This role provides the C<_rpc> method used by all API controllers

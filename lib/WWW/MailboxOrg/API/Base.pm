@@ -62,11 +62,3 @@ sub search {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::Base - Base API controller for auth and search
-
-=cut

@@ -97,11 +97,3 @@ sub delete {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::Backup - Backup API
-
-=cut

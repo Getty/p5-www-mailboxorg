@@ -63,11 +63,3 @@ sub set {
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-WWW::MailboxOrg::API::Passwordreset - Password reset API
-
-=cut

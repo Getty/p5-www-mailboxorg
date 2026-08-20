@@ -1,6 +1,6 @@
 ---
 name: perl-mailbox-org-api
-description: "WWW::MailboxOrg API patterns, JSON-RPC methods, session auth, entity objects, CLI tool mborg"
+description: Use when talking to mailbox.org from Perl — WWW::MailboxOrg, its JSON-RPC methods, session auth, entity objects, or the mborg CLI.
 user-invocable: true
 allowed-tools: Read, Grep, Bash
 model: sonnet

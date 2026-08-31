@@ -1,61 +1,20 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+WWW::MailboxOrg — Perl JSON-RPC client for the mailbox.org API (Moo; session auth
+via the `HPLS-AUTH` header), with the `mborg` CLI.
 
-## Projekt
+## Delegation
 
-WWW::MailboxOrg — Perl Client für die Mailbox.org API.
+Delegate behavior-relevant code to the right agent instead of touching it yourself —
+the principle and the lanes are in `.claude/rules/www-mailboxorg-rules.md`.
 
-## Architektur
+| Task | Agent |
+|---|---|
+| Implement / refactor / debug behavior-relevant code | `www-mailboxorg-worker` (default) |
+| Write/extend tests | `www-mailboxorg-test-writer` |
+| Pre-release audit | `www-mailboxorg-release-checker` |
 
-Siehe Plan in `/storage/raid/home/getty/.claude/plans/hazy-baking-lighthouse.md`.
-
-```
-WWW::MailboxOrg (Main Client)
-├── Role::HTTP (JSON-RPC calls)
-│   └── Role::IO (pluggable backend)
-│       └── LWPIO (Mojo::UserAgent sync backend)
-├── API::* (singleton controller: mail, domain, account, etc.)
-└── Entity::* (Account, Domain)
-```
-
-## Wichtige Referenzen
-
-- API-Dokumentation: https://api.mailbox.org/铺
-- Architektur-Vorbild: WWW::Hetzner
-
-## Wichtige Dateien
-
-- `lib/WWW/MailboxOrg.pm` — Haupt-Client
-- `lib/WWW/MailboxOrg/API/*.pm` — API Controller
-- `lib/WWW/MailboxOrg/Entity/*.pm` — Entity Objekte
-- `bin/mborg` — CLI Tool
-
-## Build & Test
-
-```bash
-dzil build        # Distribution bauen
-dzil test         # Tests ausführen
-prove -l t/       # Direkt mit prove
-```
-
-## Authentifizierung
-
-Session-basiert mit HPLS-AUTH Header. Credentials über Environment:
-- `MAILBOX_API_KEY` — API Key
-- `MAILBOX_LOGIN` — Login
-- `MAILBOX_PASSWORD` — Passwort
-
-## POD Dokumentation
-
-### Inline Commands (werden zu =head2)
-
-- `=attr name` → `=head2 name`
-- `=method method_name` → `=head2 method_name`
-- `=func func_name` → `=head2 func_name`
-- `=opt` - CLI options
-- `=env` - Environment variables
-- `=hook` - Hooks
-- `=example` - Examples
-
-PODWeaver generiert NAME, VERSION, etc. automatisch.
+The agents carry their skills via `briefing.skills` (see `.claude/agents/`); the main
+agent delegates rather than loading them. Domain knowledge lives in skill
+`www-mailboxorg-core`; house Perl/Moo/release conventions in the `getty-perl-*` and
+`perl-release-dist-ini` skills under `.claude/skills/`.

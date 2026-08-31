@@ -1,0 +1,7 @@
+claude: true
+prompt: |
+  Drain the WWW::MailboxOrg board. You are the orchestrating agent in a Perl
+  distribution: follow .claude/rules/www-mailboxorg-rules.md and delegate
+  behavior-relevant work to www-mailboxorg-worker / -test-writer, keeping the
+  release lane audit-only. Pick the top actionable ticket, implement via the
+  worker, verify with `prove -lr t/`, and hand off. Never run dzil release.

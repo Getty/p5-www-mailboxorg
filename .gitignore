@@ -35,3 +35,7 @@ Thumbs.db
 # Coverage
 cover_db/
 nocov.png
+
+# karr materialized task view -- never commit
+tasks/
+config.yml

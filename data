@@ -1,0 +1,13 @@
+---
+class: standard
+created: 2026-08-31T04:20:39Z
+id: 2
+priority: low
+status: backlog
+tags:
+- docs
+title: Verify README SEE ALSO GitHub source URL
+updated: 2026-08-31T04:20:39Z
+---
+
+README.md links Source on GitHub to https://github.com/Getty/p5-www-mailbox but the distribution is p5-www-mailboxorg. Confirm the correct repository URL and fix if wrong.

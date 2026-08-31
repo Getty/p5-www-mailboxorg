@@ -1,0 +1,13 @@
+---
+class: standard
+created: 2026-08-31T04:20:43Z
+id: 3
+priority: low
+status: backlog
+tags:
+- chore
+title: Reconcile remaining items from the archived architecture plan
+updated: 2026-08-31T04:20:43Z
+---
+
+The old CLAUDE.md pointed at an external plan (…/.claude/plans/hazy-baking-lighthouse.md) that is no longer referenced anywhere. If any planned work there is still open, capture it as concrete tickets; otherwise close this.

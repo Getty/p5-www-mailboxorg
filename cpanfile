@@ -24,5 +24,4 @@ on test => sub {
 
 on develop => sub {
     requires 'Dist::Zilla'             => '6.017';
-    requires 'Dist::Zilla::PluginBundle::Author::GETTY' => '0.052';
 };

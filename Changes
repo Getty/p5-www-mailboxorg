@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+  - Docs: fix the README SEE ALSO GitHub source URL (p5-www-mailboxorg,
+    was p5-www-mailbox)
   - Docs: correct the README credential env-var names to the
     WWW_MAILBOXORG_ namespace (the module and the mborg CLI already use
     WWW_MAILBOXORG_USER / WWW_MAILBOXORG_PASSWORD; the README still showed

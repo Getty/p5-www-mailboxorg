@@ -106,7 +106,7 @@ The `mborg` command-line tool is included:
 # SEE ALSO
 
 - [Mailbox.org API Documentation](https://api.mailbox.org/v1/doc/methods/index.html)
-- [Source on GitHub](https://github.com/Getty/p5-www-mailbox)
+- [Source on GitHub](https://github.com/Getty/p5-www-mailboxorg)
 
 # AUTHOR
 

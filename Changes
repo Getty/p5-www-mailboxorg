@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+  - Docs: correct the README credential env-var names to the
+    WWW_MAILBOXORG_ namespace (the module and the mborg CLI already use
+    WWW_MAILBOXORG_USER / WWW_MAILBOXORG_PASSWORD; the README still showed
+    the pre-0.100 MAILBOX_USER / MAILBOX_PASSWORD)
+
 0.100     2026-05-25 21:05:48Z
 
   - Refactor: extract shared _rpc method into WWW::MailboxOrg::Role::API

@@ -43,7 +43,7 @@ Create a `~/.mailboxrc` config file:
 
 Or use environment variables:
 
-    MAILBOX_USER=user@example.com MAILBOX_PASSWORD=secret mborg login
+    WWW_MAILBOXORG_USER=user@example.com WWW_MAILBOXORG_PASSWORD=secret mborg login
 
 # CLI USAGE
 
@@ -52,7 +52,7 @@ The `mborg` command-line tool is included:
     mborg --user=user@example.com --password=secret login
 
     # Read credentials from environment
-    MAILBOX_USER=user@example.com MAILBOX_PASSWORD=secret mborg login
+    WWW_MAILBOXORG_USER=user@example.com WWW_MAILBOXORG_PASSWORD=secret mborg login
 
     # Read credentials from config file
     mborg login

@@ -1,0 +1,17 @@
+---
+class: standard
+completed: 2026-09-09T07:54:32Z
+created: 2026-08-31T04:20:39Z
+id: 2
+priority: low
+started: 2026-09-09T07:53:28Z
+status: done
+tags:
+- docs
+title: Verify README SEE ALSO GitHub source URL
+updated: 2026-09-09T07:54:32Z
+---
+
+README.md links Source on GitHub to https://github.com/Getty/p5-www-mailbox but the distribution is p5-www-mailboxorg. Confirm the correct repository URL and fix if wrong.
+
+2026-09-09 07:54 Done. Fixed the README SEE ALSO GitHub source URL from p5-www-mailbox to p5-www-mailboxorg, confirmed against the origin remote (Getty p5-www-mailboxorg). No other stale references in the tree. Documentation only, Changes noted. Commit c7d8346.

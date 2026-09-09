@@ -1,0 +1,17 @@
+---
+class: standard
+completed: 2026-09-09T07:54:47Z
+created: 2026-08-31T04:20:43Z
+id: 3
+priority: low
+started: 2026-09-09T07:54:36Z
+status: done
+tags:
+- chore
+title: Reconcile remaining items from the archived architecture plan
+updated: 2026-09-09T07:54:47Z
+---
+
+The old CLAUDE.md pointed at an external plan (…/.claude/plans/hazy-baking-lighthouse.md) that is no longer referenced anywhere. If any planned work there is still open, capture it as concrete tickets; otherwise close this.
+
+2026-09-09 07:54 Done, nothing to reconcile. The archived plan file hazy-baking-lighthouse.md does not exist in the repo (there is no .claude plans directory), is not referenced anywhere (a full grep of the tree is clean), and has no git-history trace. There is no recoverable planned work to capture as tickets, so per the ticket's own criteria (otherwise close this) it is closed. No code or doc change, no commit. If the plan lives elsewhere and its items should be triaged, reopen with the file attached.

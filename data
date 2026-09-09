@@ -1,0 +1,18 @@
+---
+class: standard
+completed: 2026-09-09T07:53:24Z
+created: 2026-08-31T04:20:35Z
+id: 1
+priority: high
+started: 2026-09-09T07:51:55Z
+status: done
+tags:
+- docs
+- cli
+title: README documents wrong env vars and config for mborg
+updated: 2026-09-09T07:53:24Z
+---
+
+README.md shows MAILBOX_USER/MAILBOX_PASSWORD and a ~/.mailboxrc with user=/password=/base_url=, but the code (lib/WWW/MailboxOrg.pm around BUILDARGS) reads WWW_MAILBOXORG_USER/PASSWORD/BASE_URL/TOKEN. Reconcile README (and any mborg config-file loading) with the actual env-var namespace so the CLI usage docs are correct.
+
+2026-09-09 07:53 Done. Corrected the README credential env-var names to the WWW_MAILBOXORG_ namespace in both the CONFIGURATION and CLI USAGE sections. The client BUILDARGS and the mborg CLI already read WWW_MAILBOXORG_USER and WWW_MAILBOXORG_PASSWORD (the rename shipped in 0.100; the README was stale). The mailboxrc config example was already correct and matches the mborg config loader, so no config-loading code change was needed. Documentation only, Changes noted. Commit 7e6cd49.

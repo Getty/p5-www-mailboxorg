@@ -1,9 +1,10 @@
 package WWW::MailboxOrg::LWPIO;
 
-# ABSTRACT: Synchronous JSON-RPC backend using Mojo::UserAgent
+# ABSTRACT: Synchronous JSON-RPC backend using LWP::UserAgent
 
 use Moo;
-use Mojo::UserAgent;
+use LWP::UserAgent;
+use HTTP::Request;
 use WWW::MailboxOrg::JSONRPCRequest;
 use WWW::MailboxOrg::JSONRPCResponse;
 use JSON::MaybeXS qw(decode_json encode_json);
@@ -18,7 +19,7 @@ with 'WWW::MailboxOrg::Role::IO';
 
 =head1 DESCRIPTION
 
-Default synchronous JSON-RPC backend using L<Mojo::UserAgent>. Implements
+Default synchronous JSON-RPC backend using L<LWP::UserAgent>. Implements
 L<WWW::MailboxOrg::Role::IO>.
 
 =cut
@@ -38,7 +39,7 @@ has ua => (
     is      => 'lazy',
     builder => sub {
         my ($self) = @_;
-        Mojo::UserAgent->new(
+        LWP::UserAgent->new(
             timeout => $self->timeout,
         );
     },
@@ -46,36 +47,33 @@ has ua => (
 
 =attr ua
 
-L<Mojo::UserAgent> instance. Built lazily.
+L<LWP::UserAgent> instance. Built lazily.
 
 =cut
 
 sub call {
     my ($self, $req) = @_;
 
-    my $url = $req->url;
-
-    my %headers = (
-        'Content-Type' => 'application/json',
-    );
-    $headers{'HPLS-AUTH'} = $req->headers->{'HPLS-AUTH'}
+    my $http_req = HTTP::Request->new(POST => $req->url);
+    $http_req->header('Content-Type' => 'application/json');
+    $http_req->header('HPLS-AUTH' => $req->headers->{'HPLS-AUTH'})
         if $req->headers && $req->headers->{'HPLS-AUTH'};
 
-    my $payload = encode_json($req->to_hash);
+    $http_req->content(encode_json($req->to_hash));
 
-    my $tx = $self->ua->post($url, \%headers, json => $req->to_hash);
+    my $res = $self->ua->request($http_req);
 
-    if (my $err = $tx->error) {
+    if (!$res->is_success) {
         return WWW::MailboxOrg::JSONRPCResponse->new(
             error => {
                 code    => -32300,
-                message => $err->{message},
+                message => $res->status_line,
             },
             id => $req->id,
         );
     }
 
-    my $data = $tx->res->json;
+    my $data = eval { decode_json($res->decoded_content) };
 
     if (!$data) {
         return WWW::MailboxOrg::JSONRPCResponse->new(
@@ -92,7 +90,7 @@ sub call {
 
 =method call($req)
 
-Execute a L<WWW::MailboxOrg::JSONRPCRequest> via Mojo::UserAgent and return a
+Execute a L<WWW::MailboxOrg::JSONRPCRequest> via LWP::UserAgent and return a
 L<WWW::MailboxOrg::JSONRPCResponse>.
 
 =cut
@@ -104,6 +102,6 @@ __END__
 =head1 SEE ALSO
 
 L<WWW::MailboxOrg::Role::IO>, L<WWW::MailboxOrg::Role::HTTP>,
-L<Mojo::UserAgent>
+L<LWP::UserAgent>
 
 =cut

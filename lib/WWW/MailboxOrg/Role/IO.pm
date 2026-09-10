@@ -29,7 +29,7 @@ L<WWW::MailboxOrg::Role::HTTP> delegates all RPC communication through this
 interface, making it possible to swap out the transport layer.
 
 The default backend is L<WWW::MailboxOrg::LWPIO> (synchronous, using
-L<Mojo::UserAgent>). To use an async event loop, implement this role.
+L<LWP::UserAgent>). To use an async event loop, implement this role.
 
 =head1 REQUIRED METHODS
 

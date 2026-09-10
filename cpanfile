@@ -4,8 +4,11 @@ use strict;
 use warnings;
 
 requires 'Carp'                         => '0';
+requires 'HTTP::Request';
 requires 'JSON::MaybeXS'                => '0';
 requires 'Log::Any'                     => '0';
+requires 'LWP::Protocol::https';
+requires 'LWP::UserAgent';
 requires 'Moo'                          => '1.006';
 requires 'MooX::Singleton'              => '0';
 requires 'Params::ValidationCompiler'   => '0';

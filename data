@@ -1,0 +1,24 @@
+---
+claimed_at: 2026-09-10T03:41:53Z
+claimed_by: worker-c
+class: standard
+completed: 2026-09-10T03:41:53Z
+created: 2026-09-09T07:56:59Z
+id: 4
+priority: high
+started: 2026-09-10T03:32:16Z
+status: done
+tags:
+- deps
+- bug
+- http
+title: Default IO backend uses Mojo::UserAgent but no HTTP client is declared as a
+  prereq
+updated: 2026-09-10T03:41:53Z
+---
+
+WWW::MailboxOrg::LWPIO (the default synchronous IO backend, despite the LWPIO name its ABSTRACT and code use Mojo::UserAgent) does: use Mojo::UserAgent; and builds a Mojo::UserAgent instance. But the cpanfile declares no HTTP client at all: neither Mojo::UserAgent/Mojolicious nor LWP. So a fresh install that makes a real (non-mock) API call dies with: Can not locate Mojo/UserAgent.pm in @INC. The offline test suite cannot catch this because it runs entirely through the MockIO backend and never loads LWPIO. This is corroborated by the open GitHub issue reporting exactly Can not locate Mojo/UserAgent.pm in @INC.
+
+DECISION NEEDED (not decided autonomously, flagged for the maintainer): either (a) declare the Mojo dependency (requires Mojo::UserAgent or Mojolicious) so the current code works out of the box, which cements a heavy dependency; or (b) rewrite LWPIO to actually use LWP::UserAgent to match its name and declare requires LWP, a lighter dependency but a behaviour change to the default IO backend. This touches the dependency set and the HTTP/IO backend, both behaviour-relevant, and is driven by a public GitHub issue, so it is left for the maintainer to choose the direction. Once decided, add a regression guard that does not depend on MockIO (e.g. a compile/prereq check that the declared HTTP client actually loads).
+
+Fixed: LWPIO auf LWP::UserAgent + HTTP::Request portiert (Mojo entfernt). cpanfile deklariert nun LWP::UserAgent, LWP::Protocol::https, HTTP::Request. Regressionstest t/06-lwpio.t (offline, Fake-UA/HTTP::Response). prove -lr t/ + dzil test gruen (66 bzw. 85 Tests). Commit a1de7dc. GitHub-Issue #1 damit lokal adressiert - NICHT geschlossen (Push+Close macht Getty).

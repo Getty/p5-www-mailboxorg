@@ -8,7 +8,7 @@ briefing:
     - www-mailboxorg-core
     - getty-perl-core
     - getty-perl-moo
-    - kanban-issues-karr-cli
+    - kanban-issues-karr-ticket
 ---
 
 You are the www-mailboxorg-test-writer.

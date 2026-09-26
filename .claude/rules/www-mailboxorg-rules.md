@@ -28,7 +28,7 @@ This rule depends on whether the Agent/Task tool is available to you.
 
 - **You can spawn subagents** (orchestrating main agent): Do NOT touch
   behavior-relevant code yourself — delegate to `www-mailboxorg-worker`. Your lane:
-  coordinate, inspect, plan, review diffs, run tests, manage git, edit non-behavioral
+  coordinate, inspect, plan, review diffs, run tests, edit non-behavioral
   docs. When in doubt, delegate. Why: only the `www-mailboxorg-*` agents get their
   skills force-loaded via `briefing.skills`; you get no briefing and would touch
   internals with too little context. Specialist lanes:
@@ -37,7 +37,7 @@ This rule depends on whether the Agent/Task tool is available to you.
   |---|---|
   | Implement / refactor / debug behavior-relevant code | `www-mailboxorg-worker` (default) |
   | Write/extend tests | `www-mailboxorg-test-writer` |
-  | Pre-release audit | `www-mailboxorg-release-checker` |
+  | Commits, `Changes`, card → done, pre-release audit | `www-mailboxorg-release-manager` |
 
 - **You cannot spawn subagents** (you ARE a `www-mailboxorg-*` agent): The delegation
   lock does not apply to you — implement, refactor, debug, and test per these rules.
@@ -45,6 +45,9 @@ This rule depends on whether the Agent/Task tool is available to you.
 Behavior-relevant = the client, the API::* controllers and their param validators,
 the IO/RPC/HTTP role stack, entity objects, the `mborg` CLI, error handling, and
 tests. Pure prose docs and `Changes` notes are not.
+
+**Only `www-mailboxorg-release-manager` commits.** A worker leaves a commit-ready tree and hands its card
+to `review`; you then dispatch `www-mailboxorg-release-manager` to cut the commit and close the card.
 
 ## Coordination — karr board (always in scope)
 
@@ -55,7 +58,7 @@ board. Day-to-day:
 - `karr list --compact` / `karr board` — open work · `karr show ID` — detail
 - `karr create "Title" --priority high --tags a,b --body '…'` — new ticket
 - `karr move ID in-progress --claim NAME` — start · `karr handoff ID --claim NAME --note "…"` — to review
-- mutating commands auto-sync. Full command surface: skill `kanban-issues-karr-cli`.
+- mutating commands auto-sync. Full command surface: skill `kanban-issues-karr-coordination`.
 
 **Serialize board mutations when fanning out.** Keep implementation work parallel if
 you like, but collect the results and then loop `karr move`/`handoff`/`sync`

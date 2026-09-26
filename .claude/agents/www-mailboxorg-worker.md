@@ -2,7 +2,6 @@
 name: www-mailboxorg-worker
 description: "Default WWW::MailboxOrg worker — implement, refactor, debug, and test code in this distribution: the Moo client, the API::* controllers, the IO/RPC role stack, entity objects, and the mborg CLI. Pre-loaded with all project conventions and repo specifics. Not for release (see www-mailboxorg-release-checker). Leaves a commit-ready tree; never commits — commits belong to www-mailboxorg-release-manager."
 model: inherit
-allowed-tools: Read, Edit, Write, Bash, Glob, Grep
 briefing:
   skills:
     - www-mailboxorg-core

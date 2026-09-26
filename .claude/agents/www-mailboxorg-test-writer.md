@@ -2,7 +2,6 @@
 name: www-mailboxorg-test-writer
 description: "Write WWW::MailboxOrg tests against the MockIO backend. Never hits the real mailbox.org API. Use for test additions, regression scaffolding, and debugging controller/validation behavior through recorded mock calls."
 model: sonnet
-allowed-tools: Read, Edit, Write, Bash, Glob, Grep
 briefing:
   skills:
     - www-mailboxorg-core

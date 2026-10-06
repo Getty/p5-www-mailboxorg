@@ -1,0 +1,28 @@
+---
+class: standard
+created: 2026-10-06T19:49:35Z
+id: 7
+priority: medium
+status: backlog
+tags:
+- docs
+- git
+- review-2026-10-06
+title: 'Branch phase2-mailboxorg was never merged: the README fixes of k1 and k2 are
+  done on the board but missing on main'
+updated: 2026-10-06T19:49:35Z
+---
+
+`git log --oneline main..phase2-mailboxorg`:
+
+- `7e6cd49` Correct README credential env-var names to the WWW_MAILBOXORG_ namespace (k1)
+- `c7d8346` Fix the README GitHub source URL (k2)
+
+Both cards are `done`. `README.md` on `main` still tells users to run `MAILBOX_USER=... MAILBOX_PASSWORD=... mborg login` (lines 46 and 55) -- variables neither the module nor the CLI reads (they use `WWW_MAILBOXORG_USER`/`WWW_MAILBOXORG_PASSWORD`, `lib/WWW/MailboxOrg.pm:78`) -- and links to `https://github.com/Getty/p5-www-mailbox` (line 109).
+
+The branch also adds two `Changes` lines under `{{$NEXT}}`; `main` has meanwhile put the k4 entry (LWPIO now really LWP) into the same place, so expect one trivial conflict there.
+
+Done when: both commits are on `main` with `Changes` holding all three entries, and the branch is deleted.
+
+---
+Fleet review 2026-10-06 · kind: docs · confidence: verified

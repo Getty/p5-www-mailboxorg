@@ -1,0 +1,34 @@
+---
+class: standard
+created: 2026-10-06T19:49:30Z
+id: 6
+priority: medium
+status: backlog
+tags:
+- bug
+- jsonrpc
+- review-2026-10-06
+title: 'Role::HTTP::call: a flat argument list whose last value is 1 is sent as a
+  notification with that value dropped'
+updated: 2026-10-06T19:49:30Z
+---
+
+`lib/WWW/MailboxOrg/Role/HTTP.pm:94`: `my $is_notification = pop @params if @params && $_[-1] == 1;`
+
+`notification` marks itself by appending a literal `1` to the argument list, and `_build_jsonrpc_request` detects that by looking at the last argument of *every* call. A normal `call` whose last parameter value is numerically 1 is indistinguishable:
+
+```
+$c->_build_jsonrpc_request( 'mail.set', account => 'a@b.de', active => 1 )
+# {"id":null,"params":["account","a@b.de","active"]}      <- value gone, no id
+$c->_build_jsonrpc_request( 'mail.set', account => 'a@b.de', active => 0 )
+# {"id":1,"params":["account","a@b.de","active",0]}
+```
+
+Without an id the server sends no result, so the call silently returns nothing. Any other string as last value triggers an `Argument "..." isn't numeric in numeric eq` warning, and `my $x = ... if ...` is itself undefined behaviour in Perl.
+
+The second line shows a related problem: a flat list is sent as a positional JSON array, while the documented example `$self->call('account.get', account => 'test@example.tld')` (POD of `call`, same file) clearly means named parameters. The API controllers under `lib/WWW/MailboxOrg/API/` all pass a single hashref and are not affected; the public `call`/`notification` in the documented form are.
+
+Done when: the notification flag travels out of band (a separate `_build_jsonrpc_request( $method, \@params, notification => 1 )` or two builder methods), an even flat list is turned into a named-parameter object as the POD shows, and `t/01-http.t` covers `active => 1`.
+
+---
+Fleet review 2026-10-06 · kind: bug · confidence: verified

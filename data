@@ -1,0 +1,39 @@
+---
+class: standard
+created: 2026-10-06T19:49:26Z
+id: 5
+priority: high
+status: backlog
+tags:
+- bug
+- cli
+- deps
+- review-2026-10-06
+title: 'bin/mborg: every command dies when printing its result (Data::Printer->new
+  does not exist, and the module is not a prereq)'
+updated: 2026-10-06T19:49:26Z
+---
+
+`bin/mborg:103-107`:
+
+```
+sub pp {
+    require Data::Printer;
+    shift if ref $_[0] eq 'WWW::MailboxOrg';
+    Data::Printer->new( indent => 2, colored => 1 )->p(@_);
+}
+```
+
+`Data::Printer` has no constructor (the object interface is `Data::Printer::Object`; the public one is the exported `p`/`np`):
+
+```
+perl -e 'require Data::Printer; Data::Printer->new( indent => 2 )'
+# Can't locate object method "new" via package "Data::Printer"   (Data::Printer 1.002001)
+```
+
+`pp(` is the output path of all 45 call sites in the script, so each command performs its API call (including the mutating ones -- `account add`, `domain del`, ...) and then dies instead of showing the result. On a clean install it dies one line earlier, because `Data::Printer` is not in `cpanfile` at all. No test under `t/` runs the script (`grep -rl mborg t` is empty), which is why this went unnoticed.
+
+Done when: `pp` uses a real interface (`Data::Printer::np($data, indent => 2, colored => 1)` and `print`, or JSON::MaybeXS pretty output and no extra dependency), whatever it uses is declared in `cpanfile`, and a test at least compiles `bin/mborg` (`perl -c`) and exercises `pp` with a hashref.
+
+---
+Fleet review 2026-10-06 · kind: bug · confidence: verified

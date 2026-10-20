@@ -2,6 +2,7 @@ package WWW::MailboxOrg::Role::RPC;
 
 # ABSTRACT: Role for RPC API controllers
 
+use Carp qw(croak);
 use Moo::Role;
 
 requires 'client';

@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+  - Fix: a call without a client croaks with "No client set" in
+    WWW::MailboxOrg::Role::RPC
   - Fix: a JSON-RPC notification goes out without an id member, so the server
     reads it as a notification and answers nothing
   - Fix: has_id on a JSON-RPC request or response now asks whether the id

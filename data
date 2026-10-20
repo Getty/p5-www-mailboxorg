@@ -1,0 +1,40 @@
+---
+claimed_at: 2026-10-20T03:50:08Z
+claimed_by: k5-k7
+class: standard
+completed: 2026-10-20T03:50:08Z
+created: 2026-10-06T19:49:30Z
+id: 6
+priority: medium
+started: 2026-10-20T03:20:39Z
+status: done
+tags:
+- bug
+- jsonrpc
+- review-2026-10-06
+title: 'Role::HTTP::call: a flat argument list whose last value is 1 is sent as a
+  notification with that value dropped'
+updated: 2026-10-20T03:51:54Z
+---
+
+`lib/WWW/MailboxOrg/Role/HTTP.pm:94`: `my $is_notification = pop @params if @params && $_[-1] == 1;`
+
+`notification` marks itself by appending a literal `1` to the argument list, and `_build_jsonrpc_request` detects that by looking at the last argument of *every* call. A normal `call` whose last parameter value is numerically 1 is indistinguishable:
+
+```
+$c->_build_jsonrpc_request( 'mail.set', account => 'a@b.de', active => 1 )
+# {"id":null,"params":["account","a@b.de","active"]}      <- value gone, no id
+$c->_build_jsonrpc_request( 'mail.set', account => 'a@b.de', active => 0 )
+# {"id":1,"params":["account","a@b.de","active",0]}
+```
+
+Without an id the server sends no result, so the call silently returns nothing. Any other string as last value triggers an `Argument "..." isn't numeric in numeric eq` warning, and `my $x = ... if ...` is itself undefined behaviour in Perl.
+
+The second line shows a related problem: a flat list is sent as a positional JSON array, while the documented example `$self->call('account.get', account => 'test@example.tld')` (POD of `call`, same file) clearly means named parameters. The API controllers under `lib/WWW/MailboxOrg/API/` all pass a single hashref and are not affected; the public `call`/`notification` in the documented form are.
+
+Done when: the notification flag travels out of band (a separate `_build_jsonrpc_request( $method, \@params, notification => 1 )` or two builder methods), an even flat list is turned into a named-parameter object as the POD shows, and `t/01-http.t` covers `active => 1`.
+
+---
+Fleet review 2026-10-06 · kind: bug · confidence: verified
+
+Commit a889c86 auf Branch k5-k7: Role::HTTP hat jetzt zwei Builder (_build_jsonrpc_request / _build_jsonrpc_notification), die ueber _build_request das Notification-Flag ausserhalb der Argumentliste fuehren; _named_params macht aus einer geraden flachen Liste ein benanntes Parameter-Objekt (JSON-Objekt), ein Hashref bleibt, ein Arrayref geht als positionale Parameter raus, eine ungerade Liste croakt. t/01-http.t deckt active => 1 (Call mit id + benannten Parametern), die Notification (ohne id, Parameter unveraendert) und die ungerade Liste ab. Rot-Nachweis gegen das alte lib: params als ARRAY statt HASH, Call ohne id, kein Croak bei ungerader Liste (Modul laedt, also Verhaltensfehler). Suite: prove -lr t/ gruen, 8 Dateien, 71 Tests, 1 skipped (t/05-live.t).

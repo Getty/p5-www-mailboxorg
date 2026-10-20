@@ -1,0 +1,34 @@
+---
+claimed_at: 2026-10-20T16:20:39Z
+claimed_by: k12-mailboxorg
+class: standard
+completed: 2026-10-20T16:20:39Z
+created: 2026-10-20T16:14:07Z
+id: 12
+priority: medium
+started: 2026-10-20T16:20:39Z
+status: done
+tags:
+- release
+- prereq
+title: Das cpanfile nennt namespace::clean nicht
+updated: 2026-10-20T16:20:39Z
+---
+
+lib/WWW/MailboxOrg.pm:21 laedt namespace::clean. Das cpanfile nennt Types::Standard, Type::Library und Type::Utils, aber namespace::clean nicht - es ist eine eigene Distribution und kein Kernmodul. Ein frischer Install bricht deshalb beim Laden der Bibliothek ab, nicht beim Bauen.
+
+Ergaenzt wird `requires 'namespace::clean';` im cpanfile (alphabetisch zwischen MooX::Singleton und Params::ValidationCompiler).
+
+t/cpanfile.t haelt die Laufzeit-Voraussetzungen in einer hart kodierten Liste fest; namespace::clean kommt dazu. Damit ist der Test gegen das alte cpanfile rot - der Nachweis, dass er die Luecke auch findet.
+
+2026-10-20 16:17 Ursache bestaetigt: lib/WWW/MailboxOrg.pm:21 laedt namespace::clean, das cpanfile nannte es nicht. Fix: requires 'namespace::clean'; alphabetisch zwischen MooX::Singleton und Params::ValidationCompiler; t/cpanfile.t haelt die Laufzeit-Liste jetzt ebenfalls fest (bleibt eine Liste, kein Umbau des Teststils).
+
+Roter Beweis (altes cpanfile aus main, neuer Test): prove -lr t/cpanfile.t -> FAIL, 2 von 5 Subtests rot, 'namespace::clean fehlt dort'. Danach mit dem neuen cpanfile: PASS (5 Tests). Volle Suite: prove -lr t/ -> Files=11, Tests=85, alle gruen, nur t/05-live.t uebersprungen (offline, keine Live-Zugangsdaten).
+
+Commit 0715bbf 'Declare namespace::clean in the cpanfile (k12)' auf Branch k12-mailboxorg (von lokalem main e4066e3), nicht gepusht.
+
+2026-10-20 16:17 Also found: (1) Nur lib/WWW/MailboxOrg.pm laedt namespace::clean - die 19 weiteren Moo-Klassen (API::*, Entity::*, Role::*) nicht, obwohl die Hausregel namespace::clean in jeder Klasse vorsieht; nicht Teil von k12, nicht angefasst. (2) Im alten 0.100-Block des Changes sind zwei Zeilen laenger als 78 Spalten (Zeilen 66 und 67); der Umbruch-Commit e4066e3 hat nur den {{$NEXT}}-Block umgebrochen; nicht angefasst. (3) .worktreeinclude liegt untracked im Haupt-Checkout, nicht in diesem Worktree - nicht angefasst.
+
+2026-10-20 16:17 Fertig: cpanfile deklariert namespace::clean (alphabetisch zwischen MooX::Singleton und Params::ValidationCompiler), t/cpanfile.t haelt die Laufzeit-Prerequisites fest (bleibt eine Liste), Changes-Eintrag unter $NEXT. Beweis: Test gegen das alte cpanfile rot (2/5 Subtests), mit dem neuen cpanfile gruen; volle Suite gruen (11 Dateien, 85 Tests, t/05-live.t uebersprungen). Commit 0715bbf auf Branch k12-mailboxorg, nicht gepusht.
+
+2026-10-20 16:20 Koordinator: Commit 0715bbf liegt jetzt auf main (ff-only gemergt, kein Push). Roter Beweis vom Koordinator bestaetigt: mit dem alten cpanfile aus main ist t/cpanfile.t rot (2 von 5), mit dem neuen gruen; volle Suite 11 Dateien, 85 Tests, gruen.

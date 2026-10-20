@@ -42,15 +42,22 @@ Error object with C<code> and C<message> keys.
 =cut
 
 has id => (
-    is       => 'ro',
-    predicate => 'has_id',
+    is => 'ro',
 );
 
 =attr id
 
-Request ID this response corresponds to.
+Request ID this response corresponds to. A response without an id or with a
+null id has none, so C<has_id> is false for it.
 
 =cut
+
+# Value-based, not existence-based: Moo would report a response as having an
+# id as soon as the key exists, but a response may carry a null id.
+sub has_id {
+    my ($self) = @_;
+    return defined $self->{id};
+}
 
 sub is_success {
     my ($self) = @_;

@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+  - Fix: has_id on a JSON-RPC request or response now asks whether the id
+    carries a value; a notification without an id and a response with a null
+    id are no longer reported as having one
   - Fix: the mborg CLI prints the result of every command as pretty-printed
     JSON; the Data::Printer constructor it called does not exist, so each
     command died right after its API call

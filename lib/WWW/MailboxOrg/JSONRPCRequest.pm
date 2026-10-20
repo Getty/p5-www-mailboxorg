@@ -56,15 +56,22 @@ ArrayRef of positional parameters or HashRef of named parameters.
 =cut
 
 has id => (
-    is       => 'ro',
-    predicate => 'has_id',
+    is => 'ro',
 );
 
 =attr id
 
-Request ID for correlating responses. Undef for notifications.
+Request ID for correlating responses. Undef for notifications - a notification
+carries no id, so C<has_id> is false for it.
 
 =cut
+
+# Value-based, not existence-based: Moo would report a request as having an id
+# as soon as the key exists, but a notification sets the id to undef.
+sub has_id {
+    my ($self) = @_;
+    return defined $self->{id};
+}
 
 has url => (
     is       => 'ro',

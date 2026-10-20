@@ -1,0 +1,46 @@
+---
+claimed_at: 2026-10-20T04:53:29Z
+claimed_by: k8-k11
+class: standard
+completed: 2026-10-20T04:53:29Z
+created: 2026-10-20T04:06:11Z
+id: 10
+priority: medium
+started: 2026-10-20T04:53:29Z
+status: done
+tags:
+- bug
+title: Role::RPC croaks without loading Carp - the error path dies with an undefined
+  subroutine
+updated: 2026-10-20T04:53:29Z
+---
+
+`lib/WWW/MailboxOrg/Role/RPC.pm`:
+
+    sub _rpc {
+        my ($self, $method, @params) = @_;
+        my $client = $self->client or croak "No client set";
+        return $client->call($method, @params);
+    }
+
+The file uses `croak` but never loads Carp (`use Moo::Role;` does not export it). The module compiles, because the call is only resolved at runtime: as soon as a controller has no client, the caller gets
+
+    Undefined subroutine &WWW::MailboxOrg::Role::RPC::croak called
+
+instead of the intended "No client set".
+
+Done when: the module loads Carp (or Carp::croak) explicitly and a test covers the path without a client, expecting the message "No client set". The test has to be red against the current lib/.
+
+
+---
+Worker note (k8-k11): implemented in commit 5fb965c "Load Carp in WWW::MailboxOrg::Role::RPC (k10)".
+
+Premise correction: before the fix the role did not compile at all. Moo::Role turns on strict, so `croak "No client set"` was a compile-time syntax error ("String found where operator expected (Do you need to predeclare \"croak\"?) at Role/RPC.pm line 11"). The runtime message from the card ("Undefined subroutine &WWW::MailboxOrg::Role::RPC::croak called") never occurred. No module loads WWW::MailboxOrg::Role::RPC, which is why the broken role went unnoticed.
+
+Deviation from the suggested fix: `use Carp qw(croak);` is placed before `use Moo::Role;`. A role loads its imports before `use Moo::Role;` - anything imported after it is composed into the consumers, and croak would leak into every class that uses the role. The test pins both halves: the call without a client dies with "No client set", and the consumer has no croak method.
+
+Red proof: against the unmodified lib/ the new t/09-rpc-role.t fails to compile (syntax error in Role/RPC.pm), it was red before the fix.
+
+Suite: prove -lr t/ -> Files=10, Tests=80, t/05-live.t skipped (no credentials).
+
+2026-10-20 Koordination: Der Branch ist auf main gezogen (fast-forward, keine Merge-Konflikte). Die Karte ist damit erledigt. Ergaenzung zur Karte: `lib/WWW/MailboxOrg/Role/RPC.pm` kompilierte vorher ueberhaupt nicht ("String found where operator expected"), der in der Karte beschriebene Laufzeitfehler (croak ohne geladenes Carp) trat also nie auf. Die Korrektur ist deshalb `use Carp qw(croak);`, und sie muss vor `use Moo::Role;` stehen, sonst leakt croak in die konsumierenden Klassen. Nachweis: `prove -lr t/` = 11 Dateien, 85 Tests, alles gruen. Der rote Beweis traegt: `t/09-rpc-role.t` scheitert gegen das alte `lib/`. Kein Push, kein `dzil release`.

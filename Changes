@@ -4,6 +4,12 @@
     instead of Mojo::UserAgent, and cpanfile declares the HTTP prereqs
     (LWP::UserAgent, LWP::Protocol::https, HTTP::Request); a fresh install no
     longer dies with "Can't locate Mojo/UserAgent.pm in @INC"
+  - Docs: fix the README SEE ALSO GitHub source URL (p5-www-mailboxorg,
+    was p5-www-mailbox)
+  - Docs: correct the README credential env-var names to the
+    WWW_MAILBOXORG_ namespace (the module and the mborg CLI already use
+    WWW_MAILBOXORG_USER / WWW_MAILBOXORG_PASSWORD; the README still showed
+    the pre-0.100 MAILBOX_USER / MAILBOX_PASSWORD)
 
 0.100     2026-05-25 21:05:48Z
 

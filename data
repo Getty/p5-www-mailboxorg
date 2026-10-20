@@ -1,0 +1,36 @@
+---
+claimed_at: 2026-10-20T04:53:18Z
+claimed_by: k8-k11
+class: standard
+completed: 2026-10-20T04:53:18Z
+created: 2026-10-20T04:06:01Z
+id: 8
+priority: medium
+started: 2026-10-20T04:53:18Z
+status: done
+tags:
+- bug
+title: 'A JSON-RPC notification is sent with "id": null - the protocol wants no id
+  member at all'
+updated: 2026-10-20T04:53:18Z
+---
+
+`lib/WWW/MailboxOrg/JSONRPCRequest.pm`: `to_hash` always writes the id member:
+
+    my %hash = (
+        jsonrpc => $self->jsonrpc,
+        method  => $self->method,
+        id      => $self->id,
+    );
+
+`WWW::MailboxOrg::Role::HTTP::notification()` builds the request with `id => undef`, and `lib/WWW/MailboxOrg/LWPIO.pm:62` sends `encode_json($req->to_hash)`. A notification therefore goes out as `{"jsonrpc":"2.0","method":"mail.send","params":{...},"id":null}`.
+
+JSON-RPC 2.0 defines a notification as a Request object *without* an "id" member. "id": null is not a notification - it is a request with a null id, and a server may answer it with an error or wait for an answer that never comes. `notification()` is documented as "fire-and-forget (no response ID expected)".
+
+Done when: a notification is serialised without any id member (the key is absent, not null), the request builder and the transport agree on that, and a test asserts the encoded body of a notification has no "id" key while a call still has one. The test has to be red against the current lib/.
+
+2026-10-20 04:31 Fix umgesetzt in lib/WWW/MailboxOrg/JSONRPCRequest.pm: to_hash schreibt das id-Mitglied nur noch, wenn has_id wahr ist; LWPIO unveraendert (encode_json($req->to_hash)), Role/HTTP unveraendert (setzt weiter id => undef)._commit a39f0a8, Test t/08-jsonrpc.t (vor dem Fix rot: 2 von 7 Subtests, Body enthielt "id":null), Suite gruen (78 Tests, 1 Live-Test uebersprungen).
+
+2026-10-20 04:31 Notification geht ohne id-Mitglied raus, der Body enthaelt kein "id" mehr; ein Call behaelt seine id. Commit a39f0a8.
+
+2026-10-20 Koordination: Der Branch ist auf main gezogen (fast-forward, keine Merge-Konflikte). Die Karte ist damit erledigt. Nachweis: `prove -lr t/` = 11 Dateien, 85 Tests, alles gruen (offline, Live-Tests uebersprungen). Der rote Beweis traegt: `t/08-jsonrpc.t` und `t/09-rpc-role.t` scheitern gegen das alte `lib/`. Kein Push, kein `dzil release`.

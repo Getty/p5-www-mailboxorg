@@ -1,0 +1,38 @@
+---
+claimed_at: 2026-10-20T03:50:13Z
+claimed_by: k5-k7
+class: standard
+completed: 2026-10-20T03:50:13Z
+created: 2026-10-06T19:49:35Z
+id: 7
+priority: medium
+started: 2026-10-20T03:20:44Z
+status: done
+tags:
+- docs
+- git
+- review-2026-10-06
+title: 'Branch phase2-mailboxorg was never merged: the README fixes of k1 and k2 are
+  done on the board but missing on main'
+updated: 2026-10-20T03:51:09Z
+---
+
+`git log --oneline main..phase2-mailboxorg`:
+
+- `7e6cd49` Correct README credential env-var names to the WWW_MAILBOXORG_ namespace (k1)
+- `c7d8346` Fix the README GitHub source URL (k2)
+
+Both cards are `done`. `README.md` on `main` still tells users to run `MAILBOX_USER=... MAILBOX_PASSWORD=... mborg login` (lines 46 and 55) -- variables neither the module nor the CLI reads (they use `WWW_MAILBOXORG_USER`/`WWW_MAILBOXORG_PASSWORD`, `lib/WWW/MailboxOrg.pm:78`) -- and links to `https://github.com/Getty/p5-www-mailbox` (line 109).
+
+The branch also adds two `Changes` lines under `{{$NEXT}}`; `main` has meanwhile put the k4 entry (LWPIO now really LWP) into the same place, so expect one trivial conflict there.
+
+Done when: both commits are on `main` with `Changes` holding all three entries, and the branch is deleted.
+
+---
+Fleet review 2026-10-06 · kind: docs · confidence: verified
+
+2026-10-20 03:30 phase2-mailboxorg in k5-k7 gemergt (Merge-Commit 35f7be7), Changes-Konflikt aufgeloest, alle drei Eintraege unter NEXT erhalten. Branch phase2-mailboxorg geloescht; die Commits 7e6cd49 (k1) und c7d8346 (k2) sind ueber k5-k7 erreichbar und landen mit dem Merge von k5-k7 nach main auf main. Der Fast-Forward von main selbst kann aus dem Worktree nicht erfolgen (Harness verbietet Git-Operationen gegen den Haupt-Checkout), das macht der Koordinator mit dem Merge.
+
+Abschluss: phase2-mailboxorg ist geloescht, Changes haelt alle drei Eintraege (k1 README-Env-Variablen, k2 README-GitHub-URL, k4 LWPIO). Offen bleibt nur der Fast-Forward von main auf k5-k7 (Merge-Commit 35f7be7 plus f01d549 und a889c86) - das ist der Merge des Koordinators, aus diesem Worktree nicht moeglich.
+
+2026-10-20 03:51 Umgesetzt in a889c86 (Send named parameters and keep the notification flag out of band): ein JSON-RPC-Aufruf mit flacher Argumentliste geht jetzt als benannter Parameter-Objekt raus, die Notification-Markierung laeuft ausserhalb der Parameterliste (vorher wurde ein letzter Wert 1 als Notification-Flag verschluckt). t/01-http.t haelt das fest und war gegen das alte lib rot. Suite offline gruen (8 Dateien, 71 Tests).

@@ -1,0 +1,42 @@
+---
+class: standard
+completed: 2026-10-20T17:08:01Z
+created: 2026-10-20T16:36:32Z
+id: 13
+priority: low
+started: 2026-10-20T17:08:01Z
+status: done
+tags:
+- release
+- changes
+title: Der Changes traegt keine Kopfzeile
+updated: 2026-10-20T17:08:01Z
+---
+
+Der Changes dieser Distribution traegt keine Kopfzeile.
+
+Die Hausform (Skill getty-git-commit-style) sieht so aus:
+
+    Revision history for <name>
+
+    {$NEXT}
+      - ...
+
+Vierzehn der achtzehn Distributionen der WWW-Flotte tragen die Kopfzeile, vier
+nicht. Diese Distribution gehoert zu den vier.
+
+Es wird genau eine Zeile ergaenzt: die Kopfzeile mit dem Namen aus dist.ini
+(WWW-MailboxOrg) und die Leerzeile darunter. Sonst nichts.
+
+Kein neuer Eintrag unter {$NEXT}: die Karte aendert die Form der Datei, nicht
+ihren Inhalt. Die Einrueckung der Eintraege (2 oder 4 Leerzeichen) bleibt
+unangetastet - sie ist je Datei verschieden und nicht Teil dieser Karte.
+
+Aenderungen ausserhalb von Changes: nicht.
+Commit-Betreff nennt die Karte als (kNN), kein #NN.
+
+2026-10-20 17:07 Header ergaenzt: Revision history for WWW-MailboxOrg plus Leerzeile, ganz oben in Changes; Diff gegen main zeigt genau 2 zusaetzliche Zeilen, sonst nichts. Kein Eintrag unter NEXT - die Karte aendert die Form, nicht den Inhalt; Einrueckung der Eintraege unangetastet. Suite offline gruen: prove -lr t/ -> 11 Dateien, 85 Tests, 1 Uebersprung (t/05-live.t, selbst uebersprungen ohne Credentials). Commit 5e1ed23 auf Branch k13-mailboxorg, Basis lokales main 0715bbf.
+
+2026-10-20 17:07 Fertig: Changes traegt die Kopfzeile 'Revision history for WWW-MailboxOrg' und die Leerzeile darunter, sonst nichts geaendert. Diff gegen main: genau 2 zusaetzliche Zeilen. Suite offline gruen (11 Dateien, 85 Tests, 1 Uebersprung). Commit 5e1ed23 auf Branch k13-mailboxorg.
+
+Koordination: der Commit 5e1ed23 steht auf main (ff-only gemergt). Der Diff gegen main zeigt genau zwei zusaetzliche Zeilen ganz oben in der Changes-Datei (Kopfzeile 'Revision history for WWW-MailboxOrg' und die Leerzeile darunter), sonst nichts; kein Eintrag unter {{'$$NEXT'}}, die Einrueckung der Eintraege ist unveraendert. Suite offline: 11 Dateien, 85 Tests, PASS (t/05-live.t ueberspringt ohne Zugangsdaten).

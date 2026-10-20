@@ -1,3 +1,5 @@
+Revision history for WWW-MailboxOrg
+
 {{$NEXT}}
 
   - Fix: the cpanfile declares namespace::clean, which the client loads; a

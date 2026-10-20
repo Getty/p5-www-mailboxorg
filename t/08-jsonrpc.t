@@ -22,7 +22,7 @@ use WWW::MailboxOrg::MockIO;
   sub last_req { $_[0]->{last} }
 }
 
-# "hat eine id" muss heissen: die id hat einen Wert. Eine Notification traegt
+# "hat eine id" muss heißen: die id hat einen Wert. Eine Notification trägt
 # keine id, eine Fehlerantwort kann eine null-id tragen - beides ist keine id.
 
 subtest 'Request mit id meldet has_id' => sub {
@@ -33,7 +33,7 @@ subtest 'Request mit id meldet has_id' => sub {
   );
 
   ok( $req->has_id, 'Request mit id meldet has_id' );
-  is( $req->id, 1, 'id bleibt unveraendert' );
+  is( $req->id, 1, 'id bleibt unverändert' );
 };
 
 subtest 'Request ohne id meldet kein has_id' => sub {
@@ -54,7 +54,7 @@ subtest 'Response mit id meldet has_id' => sub {
   );
 
   ok( $res->has_id, 'Response mit id meldet has_id' );
-  is( $res->id, 1, 'id bleibt unveraendert' );
+  is( $res->id, 1, 'id bleibt unverändert' );
 };
 
 subtest 'Response ohne id meldet kein has_id' => sub {
@@ -83,13 +83,13 @@ subtest 'Notification wird ohne id-Mitglied gebaut' => sub {
   $client->notification( 'mail.send', to => 'user@example.com' );
 
   my $req = $mock->last_call;
-  ok( !$req->has_id, 'die Notification traegt keine id' );
+  ok( !$req->has_id, 'die Notification trägt keine id' );
 
   my $hash = $req->to_hash;
-  ok( !exists $hash->{id}, 'to_hash enthaelt kein id-Mitglied' );
+  ok( !exists $hash->{id}, 'to_hash enthält kein id-Mitglied' );
 
   my $body = decode_json( encode_json($hash) );
-  ok( !exists $body->{id}, 'der kodierte Body enthaelt kein id-Mitglied' );
+  ok( !exists $body->{id}, 'der kodierte Body enthält kein id-Mitglied' );
   is( $body->{method}, 'mail.send', 'die Methode steht im Body' );
 };
 
@@ -109,11 +109,11 @@ subtest 'Der Transport schickt eine Notification ohne id' => sub {
   );
 
   my $content = $fake->last_req->content;
-  ok( !exists decode_json($content)->{id}, 'der abgeschickte Body enthaelt kein id-Mitglied' );
+  ok( !exists decode_json($content)->{id}, 'der abgeschickte Body enthält kein id-Mitglied' );
   unlike( $content, qr/"id"/, 'der abgeschickte Body nennt kein id' );
 };
 
-subtest 'Ein Call behaelt sein id-Mitglied' => sub {
+subtest 'Ein Call behält sein id-Mitglied' => sub {
   my $mock = WWW::MailboxOrg::MockIO->new;
   my $client = WWW::MailboxOrg->new(
     user     => 'test@example.com',
@@ -124,7 +124,7 @@ subtest 'Ein Call behaelt sein id-Mitglied' => sub {
   $client->call( 'account.get', account => 'user@example.com' );
 
   my $body = decode_json( encode_json( $mock->last_call->to_hash ) );
-  ok( exists $body->{id}, 'der kodierte Body eines Aufrufs enthaelt ein id-Mitglied' );
+  ok( exists $body->{id}, 'der kodierte Body eines Aufrufs enthält ein id-Mitglied' );
   ok( defined $body->{id}, 'das id hat einen Wert' );
 };
 

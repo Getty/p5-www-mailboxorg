@@ -1,0 +1,42 @@
+---
+claimed_at: 2026-10-20T04:53:24Z
+claimed_by: k8-k11
+class: standard
+completed: 2026-10-20T04:53:24Z
+created: 2026-10-20T04:06:06Z
+id: 9
+priority: medium
+started: 2026-10-20T04:53:24Z
+status: done
+tags:
+- bug
+title: has_id reports a notification as having an id - the predicate only checks existence
+updated: 2026-10-20T04:53:24Z
+---
+
+`lib/WWW/MailboxOrg/JSONRPCRequest.pm`:
+
+    has id => (
+        is       => 'ro',
+        predicate => 'has_id',
+    );
+
+The predicate that Moo generates here is exists-based (`exists $self->{id}`), and the builder passes `id => undef` explicitly, so the key exists even when the value is undefined. A notification therefore answers `has_id` with true, although it has no id.
+
+`t/00-load.t` and `t/01-http.t` check `has_id` only for a request that really has an id, so the wrong answer is not covered.
+
+Done when: the predicate answers "has an id" for a request and "has no id" for a notification, and a test covers both. The same predicate exists on `JSONRPCResponse` (line 46) - check whether it needs the same treatment.
+
+2026-10-20 04:29 Fix umgesetzt in lib/WWW/MailboxOrg/JSONRPCRequest.pm und JSONRPCResponse.pm: has_id ist jetzt wertbasiert (defined $self->{id}), die Antwort-Klasse brauchte dieselbe Behandlung (eine Antwort mit "id": null hat keine id)._commit 26e4a5b, Test t/08-jsonrpc.t (vor dem Fix rot: 2 von 4 Subtests), Suite gruen (75 Tests, 1 Live-Test uebersprungen).
+
+2026-10-20 04:29 has_id meldet jetzt wertbasiert, auf Request und Response; Test t/08-jsonrpc.t deckt beide Faelle ab. Commit 26e4a5b.
+
+2026-10-20 04:29 Entscheidung (Abweichung von der Vorgabe): die vorgeschlagene Form 'predicate => sub { defined $_[0]->{id} }' funktioniert in Moo nicht - Moo erwartet bei predicate einen Methoden-Namen, kein Coderef. Gemessen: T->can('has_id') ist danach 0, der Aufruf stirbt mit "Can't locate object method has_id". Umgesetzt als eigener Methodenrumpf sub has_id { return defined $_[0]->{id} } ohne predicate-Angabe in has - damit bleibt has_id als oeffentliche Methode erhalten und der Wert selbst unveraendert (id => undef bleibt id => undef)._commit 26e4a5b.
+
+
+---
+Also found (not fixed, outside the card order):
+1. lib/WWW/MailboxOrg/Role/API.pm imports Carp after `use Moo::Role;`. A role composes its imports into the consumers, so croak leaks into every controller that uses the role - measured: WWW::MailboxOrg::API::Account->can("croak") is true. The fix would be to move `use Carp qw(croak);` before `use Moo::Role;`, as done for Role::RPC in commit 5fb965c.
+2. lib/WWW/MailboxOrg/Role/RPC.pm is not used by any module in lib/ or bin/ - only by the new test t/09-rpc-role.t. It duplicates the _rpc method of Role::API (same croak "No client set"), and the 0.100 Changes entry "Refactor: extract shared _rpc method into WWW::MailboxOrg::Role::API" left it behind as a leftover. Because nothing loads it, its broken state went unnoticed until card 10. Whether it should be deleted is a decision for the maintainer.
+
+2026-10-20 Koordination: Der Branch ist auf main gezogen (fast-forward, keine Merge-Konflikte). Die Karte ist damit erledigt. Die Pruefung hat gezeigt, dass `predicate => sub { defined $_[0]->{id} }` in Moo nicht funktioniert - eine Pruefung erwartet einen Methodennamen, keinen Codeblock; `can('has_id')` war 0. Der Worker hat deshalb eine ausdrueckliche Methode geschrieben, das Verhalten (Wert `id => undef` bei einer Notification) bleibt wie in der Karte beschrieben. Nachweis: `prove -lr t/` = 11 Dateien, 85 Tests, alles gruen. Der rote Beweis traegt: `t/08-jsonrpc.t` und `t/09-rpc-role.t` scheitern gegen das alte `lib/`. Kein Push, kein `dzil release`.

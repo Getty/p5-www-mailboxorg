@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+  - Chore: the cpanfile lists its prerequisites alphabetically and without the
+    empty version pins; the real minimum versions stay pinned
+  - Tests: the cpanfile is read by the test suite, so a lost prerequisite or an
+    empty version pin fails the suite
   - Fix: a call without a client croaks with "No client set" in
     WWW::MailboxOrg::Role::RPC
   - Fix: a JSON-RPC notification goes out without an id member, so the server

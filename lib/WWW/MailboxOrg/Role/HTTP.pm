@@ -73,11 +73,16 @@ sub call {
 
 Execute a JSON-RPC call and return the result. Croaks on error.
 
+The parameters are sent as named parameters (a JSON object). A flat list of
+key/value pairs is turned into such an object, a single hash reference is
+used as is. A single array reference is sent as positional parameters.
+An odd number of arguments croaks.
+
 =cut
 
 sub notification {
     my ($self, $method, @params) = @_;
-    my $req = $self->_build_jsonrpc_request($method, @params, 1);
+    my $req = $self->_build_jsonrpc_notification($method, @params);
     return $self->io->call($req);
 }
 
@@ -87,25 +92,44 @@ sub notification {
 
 Send a fire-and-forget notification (no response ID expected).
 
+Like L</call>, the parameters are sent as named parameters.
+
 =cut
 
 sub _build_jsonrpc_request {
     my ($self, $method, @params) = @_;
-    my $is_notification = pop @params if @params && $_[-1] == 1;
-    $is_notification //= 0;
+    return $self->_build_request($method, 0, @params);
+}
 
-    my $params_ref = @params == 1 && ref($params[0]) eq 'HASH' ? $params[0] : \@params;
+sub _build_jsonrpc_notification {
+    my ($self, $method, @params) = @_;
+    return $self->_build_request($method, 1, @params);
+}
+
+sub _build_request {
+    my ($self, $method, $is_notification, @params) = @_;
 
     my %headers;
     $self->_set_auth_header(\%headers) if $self->can('_set_auth_header');
 
     return WWW::MailboxOrg::JSONRPCRequest->new(
         method  => $method,
-        params  => $params_ref,
+        params  => $self->_named_params(@params),
         id      => $is_notification ? undef : $self->_next_id,
         url     => $self->base_url,
         headers => \%headers,
     );
+}
+
+sub _named_params {
+    my ( $self, @params ) = @_;
+
+    return {} if !@params;
+    return $params[0] if @params == 1 && ref $params[0] eq 'HASH';
+    return $params[0] if @params == 1 && ref $params[0] eq 'ARRAY';
+    croak "Odd number of named parameters: " . scalar(@params) if @params % 2;
+
+    return { @params };
 }
 
 sub _set_auth_header {

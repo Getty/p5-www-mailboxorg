@@ -29,6 +29,57 @@ subtest 'RPC-Request wird korrekt gebaut' => sub {
   is( $req->url,                 'https://api.mailbox.org/v1', 'URL korrekt' );
 };
 
+subtest 'Flache Argumentliste wird als benannter Parameter gesendet' => sub {
+  my $mock = WWW::MailboxOrg::MockIO->new;
+  my $client = WWW::MailboxOrg->new(
+    user     => 'test@example.com',
+    password => 'secret',
+    io       => $mock,
+  );
+
+  $client->call( 'account.set', account => 'user@example.com', active => 1 );
+
+  my $req = $mock->last_call;
+  is_deeply(
+    $req->params,
+    { account => 'user@example.com', active => 1 },
+    'Parameter kommen als benanntes Objekt an',
+  );
+  ok( defined $req->id, 'id vorhanden' );
+};
+
+subtest 'Notification reist ohne id und ohne Parameterverlust' => sub {
+  my $mock = WWW::MailboxOrg::MockIO->new;
+  my $client = WWW::MailboxOrg->new(
+    user     => 'test@example.com',
+    password => 'secret',
+    io       => $mock,
+  );
+
+  $client->notification( 'account.set', account => 'user@example.com', active => 1 );
+
+  my $req = $mock->last_call;
+  ok( !defined $req->id, 'keine id bei einer Notification' );
+  is_deeply(
+    $req->params,
+    { account => 'user@example.com', active => 1 },
+    'Parameter kommen als benanntes Objekt an',
+  );
+};
+
+subtest 'Ungerade Parameterliste croakt' => sub {
+  my $mock = WWW::MailboxOrg::MockIO->new;
+  my $client = WWW::MailboxOrg->new(
+    user     => 'test@example.com',
+    password => 'secret',
+    io       => $mock,
+  );
+
+  dies_ok { $client->call( 'account.set', 'user@example.com' ) }
+    'Exception bei ungerader Parameterliste';
+  like( $@, qr/Odd number of named parameters/, 'Exception nennt den Fehlergrund' );
+};
+
 subtest 'HPLS-AUTH Header' => sub {
   my $mock = WWW::MailboxOrg::MockIO->new;
   my $client = WWW::MailboxOrg->new(

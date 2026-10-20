@@ -13,6 +13,7 @@ requires 'LWP::Protocol::https';
 requires 'LWP::UserAgent';
 requires 'Moo' => '1.006';
 requires 'MooX::Singleton';
+requires 'namespace::clean';
 requires 'Params::ValidationCompiler';
 requires 'Path::Tiny';
 requires 'Pod::Usage';

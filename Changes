@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+  - Fix: the cpanfile declares namespace::clean, which the client loads; a
+    fresh install no longer dies with "Can't locate namespace/clean.pm in
+    @INC"
    - Chore: the cpanfile lists its prerequisites alphabetically and without
      the empty version pins; the real minimum versions stay pinned
    - Tests: the cpanfile is read by the test suite, so a lost prerequisite or

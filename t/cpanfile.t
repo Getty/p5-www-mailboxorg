@@ -40,6 +40,7 @@ my @expected_runtime = qw(
   LWP::UserAgent
   Moo
   MooX::Singleton
+  namespace::clean
   Params::ValidationCompiler
   Path::Tiny
   Pod::Usage

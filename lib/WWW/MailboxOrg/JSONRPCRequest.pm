@@ -100,8 +100,8 @@ sub to_hash {
     my %hash = (
         jsonrpc => $self->jsonrpc,
         method  => $self->method,
-        id      => $self->id,
     );
+    $hash{id} = $self->id if $self->has_id;
     my $params = $self->params;
     $hash{params} = $params if $params && (ref($params) eq 'ARRAY' ? @$params : %$params);
     return \%hash;
@@ -109,7 +109,8 @@ sub to_hash {
 
 =method to_hash
 
-Returns a hashref representation for JSON encoding.
+Returns a hashref representation for JSON encoding. A request without an id
+carries no C<id> member at all - that is what makes it a notification.
 
 =cut
 

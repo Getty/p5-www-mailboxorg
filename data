@@ -1,0 +1,45 @@
+---
+claimed_at: 2026-10-20T04:53:34Z
+claimed_by: k8-k11
+class: standard
+completed: 2026-10-20T04:53:34Z
+created: 2026-10-20T04:06:15Z
+id: 11
+priority: low
+started: 2026-10-20T04:53:34Z
+status: done
+tags:
+- hygiene
+title: cpanfile pins the prerequisites with => '0' - the house style names them without
+  a version
+updated: 2026-10-20T10:15:09Z
+---
+
+`cpanfile` writes most requirements as
+
+    requires 'Carp'                         => '0';
+    requires 'JSON::MaybeXS'                => '0';
+    requires 'LWP::UserAgent'               => '0';
+
+The sibling distributions of the fleet (p5-www-mikrotik, p5-www-dnsmadeeasy, p5-www-vastai) write the same block without a version:
+
+    requires 'Carp';
+    requires 'JSON::MaybeXS';
+
+`=> '0'` means "any version" and only adds noise; the house style names the prerequisites by name.
+
+Done when: the cpanfile uses the same block as the sibling distributions (no version on the runtime requirements), sorted alphabetically, and the test suite stays green. No behaviour change, so no red proof needed - but the file must not change the set of prerequisites.
+
+
+---
+Worker note (k8-k11): implemented in commit 9613bcf "List the prerequisites in the cpanfile house form (k11)".
+
+The cpanfile now lists the runtime prerequisites alphabetically, without the empty version pins, and keeps the real minimum versions (Moo 1.006, Type::Library 1.012, Type::Utils 1.012, Types::Standard 1.012, Dist::Zilla 6.017 in on develop). The on test block lost only the => '0' pins and keeps its four-space indentation. The set of prerequisites does not change: a `requires` without a version means the same minimum (0) as the old => '0', verified by diffing the parsed module/version pairs of the old and the new cpanfile - same modules, same minimum versions, none added, none dropped.
+
+New test t/cpanfile.t reads the cpanfile and pins the runtime set, the alphabetical order, the absence of empty version pins, the pinned minimum versions and the test-phase prerequisites. It was proven to bite: removing a module from the cpanfile fails two subtests, an empty version pin fails a third.
+
+Suite: prove -lr t/ -> Files=11, Tests=85, t/05-live.t skipped (no credentials).
+
+2026-10-20 Koordination: Der Branch ist auf main gezogen (fast-forward, keine Merge-Konflikte). Die Karte ist damit erledigt. Hinweis: `t/cpanfile.t` ist ein Formtest, kein Verhaltenstest - er ist auch gegen das alte `lib/` gruen und haelt die Hausform der Pruefwerkzeuge fest, keine Aenderung im Laufzeitverhalten. Nachweis: `prove -lr t/` = 11 Dateien, 85 Tests, alles gruen. Kein Push, kein `dzil release`.
+
+2026-10-20 Nachpruefung der Koordination: der Eintrag zum cpanfile stand mit 79 Spalten ueber der Hausgrenze von 78 und nutzte eine andere Einrueckung als die uebrige Datei. Beides wurde angeglichen, ohne ein Wort zu aendern. Commit e4066e3.

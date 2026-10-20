@@ -9,6 +9,7 @@ use warnings;
 use Getopt::Long::Descriptive qw( describe_options );
 use Pod::Usage qw( pod2usage );
 use File::HomeDir;
+use JSON::MaybeXS ();
 use Path::Tiny qw( path );
 
 use WWW::MailboxOrg;
@@ -101,9 +102,10 @@ if ( !$api_options{user} || !$api_options{password} ) {
 my $api = WWW::MailboxOrg->new(%api_options);
 
 sub pp {
-    require Data::Printer;
-    shift if ref $_[0] eq 'WWW::MailboxOrg';
-    Data::Printer->new( indent => 2, colored => 1 )->p(@_);
+    my @args = @_;
+    shift if @args && ref $args[0] eq 'WWW::MailboxOrg';
+    my $data = @args == 1 ? $args[0] : \@args;
+    print JSON::MaybeXS->new( canonical => 1, pretty => 1 )->encode($data), "\n";
 }
 
 # ─────────────────────────────────────────────────────────────────────────

@@ -115,3 +115,15 @@ Credentials come from `WWW_MAILBOXORG_*` env vars or a config file
 
 API docs: L<https://api.mailbox.org/v1/doc/methods/index.html>.
 Architecture model: WWW::Hetzner.
+
+## Hazards
+
+- The suite is deterministic by construction: it runs through the `MockIO` backend and
+  unsets `WWW_MAILBOXORG_*` first. Only `t/05-live.t` reaches the wire, and it
+  self-skips unless `TEST_WWW_MAILBOXORG_USER`/`_PASSWORD` are set.
+- `t/lib/` holds the MockIO harness, so `prove` must be recursive here
+  (`prove -lr t/`) — a non-recursive run silently changes what loads.
+- Validators are the contract: a controller method without a matching
+  `Params::ValidationCompiler` validator sends a malformed call, and the green
+  happy-path test hides it. Every method change carries its validator.
+

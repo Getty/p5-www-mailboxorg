@@ -7,9 +7,8 @@ skills force-loaded via `briefing.skills` — this file is for the orchestrating
 
 ## Engineering discipline
 
-1. **Think before coding** — State assumptions. When uncertain, ask rather than
-   guess. Push back when a simpler approach exists. Stop when confused; name what's
-   unclear.
+1. **Think before coding** — State assumptions. When uncertain, ask rather than guess.
+   Push back when a simpler approach exists; stop when confused, name what's unclear.
 2. **Simplicity first** — Minimum code that solves the problem. Nothing speculative.
 3. **Surgical changes** — Touch only what you must. Don't "improve" adjacent code or
    formatting. Match existing style.
@@ -24,14 +23,10 @@ skills force-loaded via `briefing.skills` — this file is for the orchestrating
 
 ## Delegation
 
-This rule depends on whether the Agent/Task tool is available to you.
-
-- **You can spawn subagents** (orchestrating main agent): Do NOT touch
-  behavior-relevant code yourself — delegate to `www-mailboxorg-worker`. Your lane:
-  coordinate, inspect, plan, review diffs, run tests, edit non-behavioral
-  docs. When in doubt, delegate. Why: only the `www-mailboxorg-*` agents get their
-  skills force-loaded via `briefing.skills`; you get no briefing and would touch
-  internals with too little context. Specialist lanes:
+- **You can spawn subagents** (orchestrating main agent): Do NOT touch behavior-relevant
+  code yourself — delegate to `www-mailboxorg-worker`. Your lane: coordinate, inspect,
+  plan, review diffs, run tests, edit non-behavioral docs. When in doubt, delegate.
+  Why: only the `www-mailboxorg-*` agents get their skills force-loaded; you get none. Specialist lanes:
 
   | Task | Agent |
   |---|---|
@@ -42,9 +37,9 @@ This rule depends on whether the Agent/Task tool is available to you.
 - **You cannot spawn subagents** (you ARE a `www-mailboxorg-*` agent): The delegation
   lock does not apply to you — implement, refactor, debug, and test per these rules.
 
-Behavior-relevant = the client, the API::* controllers and their param validators,
-the IO/RPC/HTTP role stack, entity objects, the `mborg` CLI, error handling, and
-tests. Pure prose docs and `Changes` notes are not.
+Behavior-relevant = the client, the API::* controllers and their param validators, the
+IO/RPC/HTTP role stack, entity objects, the `mborg` CLI, error handling, and tests. Pure
+prose docs and `Changes` notes are not.
 
 **Only `www-mailboxorg-release-manager` commits.** A worker leaves a commit-ready tree and hands its card
 to `review`; you then dispatch `www-mailboxorg-release-manager` to cut the commit and close the card.
@@ -52,12 +47,10 @@ to `review`; you then dispatch `www-mailboxorg-release-manager` to cut the commi
 ## Coordination — karr board (always in scope)
 
 Ticket coordination is the orchestrating agent's job, so `karr` is always in scope —
-just use it. Git-native kanban; state lives in `refs/karr/*`; this repo has its own
-board. Day-to-day:
+just use it. Git-native kanban; state lives in `refs/karr/*`; this repo has its own board.
 
-- `karr list --compact` / `karr board` — open work · `karr show ID` — detail
-- `karr create "Title" --priority high --tags a,b --body '…'` — new ticket
-- `karr move ID in-progress --claim NAME` — start · `karr handoff ID --claim NAME --note "…"` — to review
+- `karr list --compact` / `karr board` — open work · `karr show ID` — detail · `karr move
+  ID in-progress --claim NAME` — start · `karr handoff ID --claim NAME --note "…"` — to review
 - mutating commands auto-sync. Full command surface: skill `kanban-issues-karr-coordination`.
 
 **Serialize board mutations when fanning out.** Keep implementation work parallel if
@@ -70,13 +63,17 @@ sequentially — N of them landing at once is a resource event, not a cheap comm
 upload to CPAN are STRICTLY forbidden without the maintainer's explicit go-ahead —
 even if a plan or STATUS document lists "release" as the next step. Stop and ask.
 
+## Public issues (GitHub) — never act without instruction
+
+**karr** is the internal board, churned freely. **GitHub** (`github.com/Getty/p5-www-mailboxorg`) is the
+public tracker — real humans, published under the maintainer's account. Never read, list, comment on, edit,
+close or open one on your own initiative, not even to read it, unless the user points at a specific item.
+
 ## Project-specific hazards
 
 - **`t/05-live.t` talks to the real mailbox.org API.** It self-skips unless
   `TEST_WWW_MAILBOXORG_USER`/`_PASSWORD` are set. Never wire real credentials into a
-  change to force it green, and never add a test that hits the wire — the whole suite
-  is deterministic because it runs through the `MockIO` backend and unsets
-  `WWW_MAILBOXORG_*` first.
+  change to force it green, and never add a test that hits the wire.
 - **`prove` here must be recursive** (`prove -lr t/`) — `t/lib/` holds the MockIO
   harness and a non-recursive run silently changes what loads.
 - **Validators are the contract.** A controller method without a matching
@@ -85,8 +82,7 @@ even if a plan or STATUS document lists "release" as the next step. Stop and ask
 
 ## Perl / Moo specifics — reference, don't restate
 
-House Perl style, module loading, `cpanfile`/`Changes`, Moo class/role patterns,
-POD commands (`=method`/`=attr`/`=env`), dist.ini and the dzil release workflow live
-in skills `getty-perl-core`, `getty-perl-moo`, `getty-perl-release-author-getty`,
-`perl-release-dist-ini`, and the domain shape in `www-mailboxorg-core` — all
-force-loaded for `www-mailboxorg-*` agents. Do not duplicate that content here.
+House Perl style, module loading, `cpanfile`/`Changes`, Moo class/role patterns, POD
+commands and the dzil release workflow live in skills `getty-perl-core`,
+`getty-perl-moo`, `getty-perl-release-author-getty`, `perl-release-dist-ini`; the
+domain shape in `www-mailboxorg-core` — all force-loaded. Do not duplicate that here.

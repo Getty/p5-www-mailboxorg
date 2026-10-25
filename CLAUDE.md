@@ -6,7 +6,8 @@ via the `HPLS-AUTH` header), with the `mborg` CLI.
 ## Delegation
 
 Delegate behavior-relevant code to the right agent instead of touching it yourself —
-the principle and the lanes are in `.claude/rules/www-mailboxorg-rules.md`.
+the delegation lock and the publish gate are shared house rules (skilletor bundle
+`getty-cpan-dist@getty`); lanes and hazards are in `.claude/rules/www-mailboxorg-rules.md`.
 
 | Task | Agent |
 |---|---|

@@ -2,6 +2,8 @@ package WWW::MailboxOrg::LWPIO;
 
 # ABSTRACT: Synchronous JSON-RPC backend using LWP::UserAgent
 
+our $VERSION = '0.101';
+
 use Moo;
 use LWP::UserAgent;
 use HTTP::Request;

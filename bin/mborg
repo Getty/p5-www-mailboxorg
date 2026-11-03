@@ -3,6 +3,8 @@
 # PODNAME: mborg
 # ABSTRACT: Command-line interface for Mailbox.org API
 
+our $VERSION = '0.101';
+
 use strict;
 use warnings;
 

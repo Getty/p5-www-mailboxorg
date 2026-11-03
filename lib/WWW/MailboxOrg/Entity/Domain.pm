@@ -2,6 +2,8 @@ package WWW::MailboxOrg::Entity::Domain;
 
 # ABSTRACT: Domain entity object
 
+our $VERSION = '0.101';
+
 use Moo;
 
 has _client => (

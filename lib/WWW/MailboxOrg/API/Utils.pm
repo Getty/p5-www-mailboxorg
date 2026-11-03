@@ -2,6 +2,8 @@ package WWW::MailboxOrg::API::Utils;
 
 # ABSTRACT: Utility API (parse_headers, parse_date, generate_message_id)
 
+our $VERSION = '0.101';
+
 use Moo;
 with 'WWW::MailboxOrg::Role::API';
 use Params::ValidationCompiler qw( validation_for );

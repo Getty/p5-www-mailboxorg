@@ -2,6 +2,8 @@ package WWW::MailboxOrg::API::Mailinglist;
 
 # ABSTRACT: Mailing list API
 
+our $VERSION = '0.101';
+
 use Moo;
 with 'WWW::MailboxOrg::Role::API';
 use Params::ValidationCompiler qw( validation_for );

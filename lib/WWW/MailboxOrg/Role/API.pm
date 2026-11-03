@@ -2,6 +2,8 @@ package WWW::MailboxOrg::Role::API;
 
 # ABSTRACT: Shared API controller behavior (client, _rpc)
 
+our $VERSION = '0.101';
+
 use Moo::Role;
 use Carp qw(croak);
 

@@ -2,6 +2,8 @@ package WWW::MailboxOrg::Types;
 
 # ABSTRACT: Custom types for Mailbox.org API
 
+our $VERSION = '0.101';
+
 use Type::Library -base, -declare => qw( EmailAddress DomainName );
 use Type::Utils -all;
 use Types::Standard -types;

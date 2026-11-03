@@ -2,6 +2,8 @@ package WWW::MailboxOrg::Role::HTTP;
 
 # ABSTRACT: JSON-RPC HTTP client role
 
+our $VERSION = '0.101';
+
 use Moo::Role;
 use WWW::MailboxOrg::JSONRPCRequest;
 use WWW::MailboxOrg::JSONRPCResponse;

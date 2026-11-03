@@ -2,6 +2,8 @@ package WWW::MailboxOrg::Role::IO;
 
 # ABSTRACT: Interface role for pluggable JSON-RPC backends
 
+our $VERSION = '0.101';
+
 use Moo::Role;
 
 requires 'call';

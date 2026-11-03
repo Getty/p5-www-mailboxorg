@@ -2,6 +2,8 @@ package WWW::MailboxOrg::Entity::Account;
 
 # ABSTRACT: Account entity object
 
+our $VERSION = '0.101';
+
 use Moo;
 
 has _client => (

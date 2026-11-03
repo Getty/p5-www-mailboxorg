@@ -2,6 +2,8 @@ package WWW::MailboxOrg::JSONRPCResponse;
 
 # ABSTRACT: JSON-RPC 2.0 response object
 
+our $VERSION = '0.101';
+
 use Moo;
 
 =head1 SYNOPSIS

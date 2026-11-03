@@ -2,6 +2,8 @@ package WWW::MailboxOrg::API::System;
 
 # ABSTRACT: System API (hello, test, capabilities)
 
+our $VERSION = '0.101';
+
 use Moo;
 with 'WWW::MailboxOrg::Role::API';
 

@@ -316,24 +316,24 @@ Uses JSON-RPC 2.0 over HTTPS with session-based authentication.
 =head1 ENVIRONMENT
 
 All environment variables are namespaced with the C<WWW_MAILBOXORG_> prefix,
-reflecting the module namespace. A value passed explicitly to L</new> always
+reflecting the module namespace. A value passed explicitly to C<new> always
 takes precedence over the corresponding environment variable.
 
 =env WWW_MAILBOXORG_USER
 
-Default for L</user> when not passed to L</new>.
+Default for L</user> when not passed to C<new>.
 
 =env WWW_MAILBOXORG_PASSWORD
 
-Default for L</password> when not passed to L</new>.
+Default for L</password> when not passed to C<new>.
 
 =env WWW_MAILBOXORG_BASE_URL
 
-Default for L</base_url> when not passed to L</new>.
+Default for L</base_url> when not passed to C<new>.
 
 =env WWW_MAILBOXORG_TOKEN
 
-Pre-set session L</token> when not passed to L</new>. Lets you reuse an
+Pre-set session L</token> when not passed to C<new>. Lets you reuse an
 existing session instead of calling L</login>.
 
 =head1 SEE ALSO
